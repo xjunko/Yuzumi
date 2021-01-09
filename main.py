@@ -1,7 +1,8 @@
 import asyncio
+import logging
 from aiohttp import web
 from aiohttp.abc import AbstractAccessLogger
-import logging
+
 
 # fuck my life
 from handlers.nami.index import index
@@ -21,7 +22,7 @@ from objects import glob, score
 from objects.player import Player
 
 #
-from utils.pp import PPCalculator, recalc_scores, modsBitsFromDroidStr
+import helpers
 
 
 def add_routes(app: web.Application):
@@ -29,7 +30,7 @@ def add_routes(app: web.Application):
     app.router.add_get('/', index)
 
     routes = [
-        # Nami IBancho
+        # cho stuff
         ('/api/upload/{replay_id}', 'GET', view_replay),
         ('/api/upload.php', 'POST', upload_replay),
         ('/api/login.php', 'POST', login),
@@ -38,7 +39,7 @@ def add_routes(app: web.Application):
         ('/api/submit.php', 'POST', submit_score),
         ('/api/register.php', 'POST', register),
 
-        # shit that is not Nami IBancho
+        # shit that is not cho stuff
         ('/a/{avatar_id}', 'GET', view_avatar),
         ('/d/release', 'GET', download_apk),
 
@@ -60,9 +61,6 @@ async def init(loop):
 
 
     #await recalc_scores()
-
-    
-
     #app.on_startup.append(cache_players)
     app.on_shutdown.append(shutdown)
     return app
@@ -102,12 +100,15 @@ def main():
     app = loop.run_until_complete(init(loop))
     add_routes(app)
 
+    # check folders
+    helpers.checkFolder()
+
     try:
         web.run_app(app, port=80, host='0.0.0.0', access_log_class=access_log)
     except RuntimeError:
-        print('okekbye')
+        print('...bye')
     except KeyboardInterrupt:
-        print('mmmbye')
+        print('...bye')
 
 
 if __name__ == "__main__":
