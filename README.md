@@ -14,7 +14,11 @@
 ## Features
 * Custom avatar server (need .apk modification to work)
 * PP System (not recommended to use as the implementation of it is retarded)
+* Fully-working osu!droid server
 * Insert more :)
+
+## Todo
+* Everytime a player sends a request they send an sign parameter, idk what to do with it yet.
 
 ## Requirements
 * [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator.

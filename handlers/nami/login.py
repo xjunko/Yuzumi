@@ -8,7 +8,7 @@ async def login(request):
     params = await helpers.readParam(request)
     
     if 'username' not in params:
-        return web.Response(text='FAILED\noklol')
+        return web.Response(text='FAILED\what the fuck')
     
     
     p = await glob.players.get(name=params['username'])
