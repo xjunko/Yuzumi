@@ -6,6 +6,14 @@ __pycache__/
 # C extensions
 *.so
 
+# shit
+config.py
+data.db
+
+data/release/*
+data/replays/*
+
+
 # Distribution / packaging
 .Python
 build/
