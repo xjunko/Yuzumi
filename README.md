@@ -46,7 +46,7 @@ You need java installed for this (the same one that you need for Minecraft :>)
 * Create an folder somewhere in your pc and copy all of the file there
 * Do `java -jar apktool.jar d droid.apk` and wait till the thing completes
 * Open the folder and go to `smali\ru\nsu\ccfit\zuev\osu` and open Notepad++
-* Ctrl+F into Notepad++ and go to `Find in Files` tab.
+* Ctrl+F into Notepad++ and go to `Find in Files` tab and do as below. Note that the directory may be different from the screenshot.
 ![ss](https://yuzumi.please-end.me/IDI8p4.png)
 * You will get something like this 
 ![ss](https://yuzumi.please-end.me/pxYs30.png)
