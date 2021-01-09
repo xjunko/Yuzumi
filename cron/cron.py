@@ -3,20 +3,19 @@ from objects import glob
 
 import asyncio, logging
 
-# meme cron to update ranks
+# meme cron to update user stats 
 # probably optional idfk
 
-# also "kinda" inspired from RealistikDash GD server
+# also based from RealistikDash GD server
 
 
 # just put cron shit here since its not that much (only 1)
 
 async def update_stats():
     ''' idfk '''
-    # loo00p
-    for player in glob.players.players: # doesnt work on init, since cache_player call the thing
-        await player.update_stats() # lol
-    logging.debug('ooo yeaa bitch we updated thh33 rankkk')
+    for player in glob.players.players: 
+        await player.update_stats()
+    logging.debug('Players Stats is updated!')
 
 
 
