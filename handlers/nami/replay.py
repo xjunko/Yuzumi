@@ -12,6 +12,7 @@ async def view_replay(request):
 
 
 # post
+# TODO: add verication stuff maybe? so ppl cant just upload shit here
 async def upload_replay(request):
     replay_id = request.rel_url.query['replayID']
     body = await request.content.read()
