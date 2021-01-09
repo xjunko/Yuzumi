@@ -12,7 +12,13 @@
 
 
 ## Features
-Literally everything osu!droid server did.
+* Custom avatar server (need .apk modification to work)
+* PP System (not recommended to use as the implementation of it is retarded)
+* Insert more :)
 
-## Usage	
+## Requirements
+* Python and General-programming knowledge.
+* osu! api key for PP system. Optional if you're planning to use score as ranking system.
+
+## Setup	
 soontm
