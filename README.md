@@ -52,7 +52,7 @@ You need java installed for this (the same one that you need for Minecraft :>)
 ![ss](https://yuzumi.please-end.me/pxYs30.png)
 * If you did then put your domain/ip into the `Replace with` box, if not then try again till you find it.
 ![ss](https://yuzumi.please-end.me/EgdG4F.png)
-* After that, search for `secure.gravatar.com/avatar` and replace it with your domain
+* After that, search for `secure.gravatar.com` and replace it with your domain
 * Okay, we're almost there.
 * Go back to the folder that you created and do `java -jar apktool.jar b droid` and the apk should be in `droid\dist` after it completes.
 * Do `java -jar signer.jar -a droid\dist\droid.apk --out droid_sign` and there should be `droid-aligned-debugSigned.apk` in the `droid_sign folder`
