@@ -19,6 +19,7 @@
 
 ## Todo
 * Everytime a player sends a request they send an sign parameter, idk what to do with it yet.
+* Api
 
 ## Requirements
 * [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator.
