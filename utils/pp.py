@@ -1,3 +1,10 @@
+"""
+
+    This shit is cursed, use on your own accord.
+
+"""
+
+
 import asyncio
 import aiofiles
 import aiohttp
