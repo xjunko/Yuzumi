@@ -66,4 +66,5 @@ You need java installed for this (the same one that you need for Minecraft :>)
 
 
 
-
+## Disclaimer
+This is my first time working with this kind of stuff so if I do stupid stuff please say so :)
