@@ -33,10 +33,13 @@ class osuMods(IntEnum):
     fl = 1 << 10
     v2 = 1 << 29
 
+
+
+# only used in PPCalculator
 def modsBitsFromDroidStr(mods: str):
     ''' fucked '''
     modstr = [m.value for m in droidMods]
-    val = 4 # cuz we want to use td
+    val = 4 # hardcode TD to mods
     for n, word in enumerate(mods):
         if word in modstr:
             val += osuMods[droidMods(word).name].value
