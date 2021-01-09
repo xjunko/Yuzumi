@@ -41,6 +41,7 @@ def add_routes(app: web.Application):
 
         # shit that is not cho stuff
         ('/a/{avatar_id}', 'GET', view_avatar),
+        ('/avatar/{avatar_id}', 'GET', view_avatar),
         ('/d/release', 'GET', download_apk),
 
     ]
