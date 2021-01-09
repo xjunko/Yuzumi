@@ -30,7 +30,7 @@ async def map_leaderboard(request):
         #res += "\n16 free_#1 420 -420 S - 100000 -69"
         #res += "\n16 what_the_fuck_lol 69 -69 S - 100000 -69"
         #res += "\n16 dont_click_here 69 -69 S - 100000 -69"
-        res += '\nBRUH'
+        res += '\n'
 
 
     return web.Response(text=res)
