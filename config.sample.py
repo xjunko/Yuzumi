@@ -1,7 +1,7 @@
 
 ## MAIN
 server_name = 'Yuzumi' # yes
-domain = 'cock.redz.tk' # change this to your domain
+domain = 'fire.redz.tk' # change this to your domain
 passwd_salt = '69420GAMERINGGAMER' # not used atm
 
 ## CRON
