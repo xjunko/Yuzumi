@@ -1,4 +1,17 @@
 # stupid shit in here
+import os, logging
+
+def checkFolder():
+    # checks if data/* folder is missing
+    folders = ['replays', 'avatar', 'release']
+
+    if not os.path.isdir('data'):
+        os.mkdir('data')
+
+    for folder in folders:
+        if not os.path.isdir(f'data/{folder}'):
+            logging.info(f'{folder} is missing in data! creating...')
+            os.mkdir(f'data/{folder}')
 
 
 async def readParam(request):
