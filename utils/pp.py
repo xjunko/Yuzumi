@@ -78,7 +78,7 @@ class PPCalculator:
     async def data_from_osuapi(md5: str):
         url = 'https://old.ppy.sh/api/get_beatmaps'
 
-        r = await glob.db.fetch('select data from maps where hash = ?', [md5])
+        r = await glob.db.fetch('SELECT data FROM maps WHERE hash = ?', [md5])
 
         if r:
             return json.loads(r[0]['data'])['beatmap_id']
