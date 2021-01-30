@@ -1,8 +1,10 @@
 
 ## MAIN
-server_name = 'Yuzumi' # yes
-domain = 'fire.redz.tk' # change this to your domain
-passwd_salt = '69420GAMERINGGAMER' # not used atm
+server_name = 'Yuzumi'       # y3s
+port = 80                    # server port
+host = '0.0.0.0'             #
+domain = 'your-domain.here'  # change this to your domain
+passwd_salt = '!h@t3myl!f3'  # not used atm
 
 ## CRON
 # 1 = 1 Minute

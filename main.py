@@ -105,7 +105,7 @@ def main():
     helpers.checkFolder()
 
     try:
-        web.run_app(app, port=80, host='0.0.0.0', access_log_class=access_log)
+        web.run_app(app, port=glob.config.port, host=glob.config.host, access_log_class=access_log)
     except RuntimeError:
         print('...bye')
     except KeyboardInterrupt:

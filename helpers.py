@@ -18,6 +18,9 @@ async def readParam(request):
     params = await request.content.read()
     return dict((param.split('=')[0],param.split('=')[-1]) for param in params.decode().split('&'))
 
+
+
+# unused iirc, in favour of score object
 class playDataReader:
     def __init__(self, data: str):
         self.data = data
