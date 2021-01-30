@@ -13,7 +13,7 @@ cron_delay = 1  # used for updating user stats
 ## RANKING ##
 
 #- GLOBAL -#
-pp = False                 # enable this to use pp system (currently using osu! pp system + TD mod... might use Alice's DroidPP)
+pp = False                 # enable to use pp system (not recommended atm)
 osu_key = 'YOURAPIKEYHERE' # used for beatmap info, unused if pp is disabled
 
 #- MAP LEADERBOARD -#
