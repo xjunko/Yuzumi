@@ -141,7 +141,7 @@ class PPCalculator:
 
 
 
-
+"""
 async def recalc_scores():
     ''' never use this unless something fucked up/testing '''
     print('recalculatin sk0r3')
@@ -159,7 +159,7 @@ async def recalc_scores():
 
             pp = await m.calc()
 
-            print(score['mapHash'], pp)
+            print(score['mapHash'], pp.total_pp)
 
 
-
+"""
