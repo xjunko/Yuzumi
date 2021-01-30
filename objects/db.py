@@ -1,8 +1,9 @@
 import aiosqlite, asyncio
 import logging
 
+from objects import glob
 
-class sqlite3Wrapper:
+class sqliteDB:
     ''' based from cmyui's {pkg: mysql} but sqlite 
     '''
     @staticmethod
@@ -159,7 +160,8 @@ class sqlite3Wrapper:
 
     # gameplay stuff?
     async def leaderboard(self, mapHash: str):
-        res = await self.fetchall('select * from scores where maphash = ? order by score desc', [mapHash])
+        order_by = 'pp' if glob.config.sort_by_pp else 'score'
+        res = await self.fetchall(f'select * from scores where maphash = ? order by {order_by} desc', [mapHash])
 
         return res if res else {}
 

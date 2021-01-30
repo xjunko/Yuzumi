@@ -1,9 +1,9 @@
-from objects.db import sqlite3Wrapper
+from objects import db
 from objects.collections import PlayerList
 
 import config
 
-db: sqlite3Wrapper = sqlite3Wrapper()
+db: 'Database' = db.sqliteDB()
 players: PlayerList = PlayerList()
 
 

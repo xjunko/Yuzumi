@@ -3,6 +3,8 @@ from objects import glob
 
 import helpers
 
+from objects import glob
+
 # post
 async def map_leaderboard(request):
     ''' returns leaderboard in o!droid format '''
@@ -19,7 +21,7 @@ async def map_leaderboard(request):
             res += "\n{playID} {name} {score} {combo} {rank} {mods} {acc} {gravatarHash}".format(
                 playID = play['id'],
                 name = p.prefixName,
-                score = play['score'],
+                score = play['pp'] if glob.config.pp_leaderboard else play['score'],
                 combo = play['combo'],
                 rank = play['rank'],
                 mods = play['mods'] or '-',
