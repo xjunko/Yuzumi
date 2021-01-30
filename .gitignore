@@ -12,6 +12,7 @@ data.db
 
 data/release/*
 data/replays/*
+data/beatmaps/*
 
 
 # Distribution / packaging
