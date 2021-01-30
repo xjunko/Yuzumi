@@ -43,6 +43,11 @@ class Player:
     def prefixName(self):
         return f'[{self.prefix}]{self.name}' if self.prefix else self.name
 
+    @property
+    def rankBy(self):
+        return self.stats.pp if glob.config.pp else self.stats.rscore
+    
+
     async def fromSQL(self):
         stats = await glob.db.userStats(id=self.id)
         if not stats:
@@ -50,23 +55,8 @@ class Player:
 
         self.stats = Stats(**stats)
 
-    """
-    async def bcrypt_shit(self):
-        ''' retarded function to do retarded stuff, not used atm '''
-        password = self.pw_bcrypt # md5 password
-        bcrypt_pass = bcrypt.hashpw(password, glob.config.passwd_salt)
-        glob.cache['bcrypt'][bcrypt_pass] = password
-
-        self.pw_bcrypt = bcrypt_pass
-    """
-
 
     async def update_stats(self):
-        ''' 
-        was originally used for updating rank, rewrite to update stats instead
-
-        '''
-
         # also credit to miau from oldsu! for this query, might use this but i found a another one that fits my use from gulag
         '''
             SELECT * FROM (SELECT Username, ROW_NUMBER() OVER (ORDER BY RankedScore DESC) AS 'Rank' FROM users) t WHERE Username=@username"
