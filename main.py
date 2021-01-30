@@ -47,6 +47,10 @@ def add_routes(app: web.Application):
         ('/avatar/{avatar_id}', 'GET', view_avatar),
         ('/d/release', 'GET', download_apk),
 
+        # api
+        ('/api/get_stats', 'GET', api.get_stats),
+        ('/api/leaderboard', 'GET', api.leaderboard)
+
     ]
 
     for path, method, handler in routes:
