@@ -18,14 +18,15 @@
 * Insert more :)
 
 ## Todo
-* Everytime a player sends a request they send an sign parameter, idk what to do with it yet.
-* Api
-* add Mysql Support
+* Sign Parameter
+* Api's
+* MySql Support
 
 ## Requirements
 * [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator.
 * [Python 3.8+](https://www.python.org/downloads/release/python-386/)
 * [Notepad++](https://notepad-plus-plus.org/downloads/)
+* Python and and general-programming knowledge.
 * An Domain or IP address
 
 ## Setting up (server)
