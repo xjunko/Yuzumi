@@ -57,7 +57,7 @@ class sqliteDB:
                 "prefix"    TEXT,
                 "username"  TEXT,
                 "username_safe" TEXT,
-                "password"  TEXT,
+                "password_hash"  TEXT,
                 "device_id" TEXT,
                 "sign"  TEXT,
                 "avatar_id" TEXT,
@@ -68,7 +68,7 @@ class sqliteDB:
                 );
 
                 INSERT OR IGNORE INTO users (
-                id, username, username_safe, password, status
+                id, username, username_safe, password_hash, status
                 )
                 VALUES(-1, "???", "???", "rembestwaifu69420!!@", -1);
 
