@@ -26,7 +26,7 @@
 * [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator.
 * [Python 3.8+](https://www.python.org/downloads/release/python-386/)
 * [Notepad++](https://notepad-plus-plus.org/downloads/)
-* Python and and general-programming knowledge.
+* Python and general-programming knowledge.
 * An Domain or IP address
 
 ## Setting up (server)
