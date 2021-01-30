@@ -3,7 +3,7 @@ import os, logging
 
 def checkFolder():
     # checks if data/* folder is missing
-    folders = ['replays', 'avatar', 'release']
+    folders = ['replays', 'avatar', 'release', 'beatmaps']
 
     if not os.path.isdir('data'):
         os.mkdir('data')
