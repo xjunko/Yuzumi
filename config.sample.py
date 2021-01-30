@@ -18,4 +18,3 @@ osu_key = 'YOURAPIKEYHERE' # used for beatmap info, unused if pp is disabled
 
 #- MAP LEADERBOARD -#
 pp_leaderboard = False # shows pp instead of score
-sort_by_pp = False     # self explainatory

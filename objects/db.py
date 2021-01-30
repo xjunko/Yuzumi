@@ -160,7 +160,7 @@ class sqliteDB:
 
     # gameplay stuff?
     async def leaderboard(self, mapHash: str):
-        order_by = 'pp' if glob.config.sort_by_pp else 'score'
+        order_by = 'pp' if glob.config.pp_leaderboard else 'score'
         res = await self.fetchall(f'select * from scores where maphash = ? order by {order_by} desc', [mapHash])
 
         return res if res else {}
