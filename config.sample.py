@@ -21,3 +21,5 @@ osu_key = 'YOURAPIKEYHERE'
 #- MAP LEADERBOARD -#
 pp_leaderboard = False # Shows pp instead of score and sort by pp
 
+#- MAINTENACE -#
+disable_submit = False # Shows an message to user when trying to play an map.
