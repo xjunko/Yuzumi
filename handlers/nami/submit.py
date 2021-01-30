@@ -2,6 +2,7 @@ from aiohttp import web
 from objects import glob
 
 from objects.score import Score, SubmissionStatus
+from utils import response
 
 import helpers, logging, copy, aiofiles
 
@@ -16,13 +17,16 @@ async def submit_score(request):
     # print(p.sign, params['sign'])
 
     if not p:
-        return web.Response(text='FAILED\nWho the fuck are you lol')
+        return await response.normal(False, 'Player not found.')
+
+    if glob.config.disable_submit:
+        return await response.normal(False, "Score submission is disabled right now.")
 
 
     if (mapHash := params.get('hash')):
         p.stats.playing = mapHash
         logging.debug(f'changed {p} playing to {mapHash}')
-        return web.Response(text=f'SUCCESS\n1 {p.id}')
+        return await response.normal(True, 1, p.id)
 
     elif playData := params.get('data'):
         s = await Score.from_submission(playData)
@@ -30,7 +34,7 @@ async def submit_score(request):
         if not s:
             # logging.debug('shit wtf')
             # pretty sure this one just crash the client
-            return 'FAILED\nfucked'
+            return await response.normal(False, 'Nope.')
 
         if s.status == SubmissionStatus.BEST:
             # fuck off other score into status 1 (submitted)
@@ -74,12 +78,18 @@ async def submit_score(request):
 
 
         # fuck my ass i hope this works
-        res = f'SUCCESS\n{int(stats.rank)} {int(stats.pp) if glob.config.pp else int(stats.rscore)} {stats.droid_acc} {s.rank} {s.id if upload_replay else ""}'
-        return web.Response(text=res)
+        #res = f'SUCCESS\n{int(stats.rank)} {int(stats.pp) if glob.config.pp else int(stats.rscore)} {stats.droid_acc} {s.rank} {s.id if upload_replay else ""}'
+        return await response.normal(True,
+                                     int(stats.rank), 
+                                     int(stats.rankBy),
+                                     stats.droid_acc,
+                                     s.rank,
+                                     s.id if upload_replay else ""
+                                     )
 
 
 
 
         
 
-    return web.Response(text='FAILED\nFUCK')
+    return await response.normal(False, "Something fucked up.")

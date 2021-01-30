@@ -2,15 +2,15 @@ from aiohttp import web
 from objects import glob
 
 import helpers
-
 from objects import glob
+from utils import response
 
 # post
 async def map_leaderboard(request):
     ''' returns leaderboard in o!droid format '''
     params = await helpers.readParam(request)
+    args = []
     
-    res = 'SUCCESS'
     if plays := await glob.db.leaderboard(mapHash=params['hash']):
         for play in plays:
 
@@ -18,7 +18,7 @@ async def map_leaderboard(request):
                 continue
 
             p = await glob.players.get(id=int(play['playerID']))
-            res += "\n{playID} {name} {score} {combo} {rank} {mods} {acc} {gravatarHash}".format(
+            args.append("{playID} {name} {score} {combo} {rank} {mods} {acc} {gravatarHash}".format(
                 playID = play['id'],
                 name = p.prefixName,
                 score = play['pp'] if glob.config.pp_leaderboard else play['score'],
@@ -27,25 +27,23 @@ async def map_leaderboard(request):
                 mods = play['mods'] or '-',
                 acc = int(play['acc']*1000),
                 gravatarHash = f'{p.id}'
-            )
+            ))
+
+    if args:
+        return await response.leaderboard(args)
     else:
-        #res += "\n16 free_#1 420 -420 S - 100000 -69"
-        #res += "\n16 what_the_fuck_lol 69 -69 S - 100000 -69"
-        #res += "\n16 dont_click_here 69 -69 S - 100000 -69"
-        res += '\n'
+        return await response.normal(True)
 
-
-    return web.Response(text=res)
+    
 
 
 async def view_leaderboard_play(request):
     ''' returns play data '''
     params = await helpers.readParam(request)
 
-    res = 'FAILED\nFUCK'
 
     if playData := await glob.db.getPlay(id=int(params["playID"])):
-        res = 'SUCCESS\n{mods} {score} {combo} {rank} {hitgeki} {hit300} {hitkatsu} {hit100} {hitmiss} {hit50} {acc}'.format(
+        res = '{mods} {score} {combo} {rank} {hitgeki} {hit300} {hitkatsu} {hit100} {hitmiss} {hit50} {acc}'.format(
             mods = playData['mods'],
             score = playData['score'],
             combo = playData['combo'],
@@ -59,8 +57,10 @@ async def view_leaderboard_play(request):
             acc = int(playData['acc']*1000)
 
         )
+
+        return await response.normal(True, res)
     
 
-    return web.Response(text=res)
+    return await response.normal(False)
 
 

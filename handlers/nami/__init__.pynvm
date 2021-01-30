@@ -1,6 +1,0 @@
-from .index import index
-from .replay import view_replay, upload_replay
-from .login import login
-from .leaderboard import view_leaderboard_play, map_leaderboard
-from .submit import submit_score
-from .register import register
