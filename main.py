@@ -15,6 +15,9 @@ from handlers.nami.register import register
 from handlers.avatar import view_avatar
 from handlers.download import download_apk
 
+# api
+from handlers import api
+
 from cron.cron import cron_loop
 
 #
