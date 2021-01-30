@@ -19,7 +19,7 @@
 
 ## Todo
 * Sign Parameter
-* Api's
+* Apis [Partially added]
 * MySql Support
 
 ## Requirements
