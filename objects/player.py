@@ -7,7 +7,7 @@ from utils import response
 
 @dataclass
 class Stats:
-    id: int # unused
+    id: int 
     rank: int
     tscore: int
     rscore: int
