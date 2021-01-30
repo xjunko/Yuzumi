@@ -80,9 +80,9 @@ class Player:
         '''
 
         res = await glob.db.fetchall(
-            'select s.acc, s.pp from scores s '
-            'where s.playerID = ? and s.status = 2 '
-            'order by s.score desc limit 100'
+            'SELECT s.acc, s.pp FROM scores s '
+            'WHERE s.playerID = ? and s.status = 2 '
+            'ORDER BY s.score DESC LIMIT 100'
             , [self.id]
             )
         
