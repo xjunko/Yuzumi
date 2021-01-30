@@ -70,7 +70,7 @@ class sqliteDB:
                 INSERT OR IGNORE INTO users (
                 id, username, username_safe, password, status
                 )
-                VALUES(-1, "???", "???", "rembestwaiu69420!!@", -1);
+                VALUES(-1, "???", "???", "rembestwaifu69420!!@", -1);
 
                 INSERT OR IGNORE INTO stats (id, rank)
                 VALUES (-1, 100);
