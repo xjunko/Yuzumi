@@ -34,10 +34,10 @@ async def submit_score(request):
 
         if s.status == SubmissionStatus.BEST:
             # fuck off other score into status 1 (submitted)
-            await glob.db.execute('update scores set status = 1 where status = 2 and mapHash = ? and playerID = ?', [s.mapHash, s.player.id])
+            await glob.db.execute('UPDATE scores SET status = 1 WHERE status = 2 AND mapHash = ? AND playerID = ?', [s.mapHash, s.player.id])
 
         vals = [s.status, s.mapHash, s.player.id, s.score, s.max_combo, s.grade, s.acc, s.h300, s.hgeki, s.h100, s.hkatsu, s.h50, s.hmiss, s.mods, s.pp]
-        s.id = await glob.db.execute('insert into scores values (NULL, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', vals)
+        s.id = await glob.db.execute('INSERT INTO scores VALUES (NULL, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', vals)
 
 
         """ pain and suffering """
@@ -65,7 +65,7 @@ async def submit_score(request):
 
         # update stats
         await glob.db.execute(
-            'update stats set rscore = ?, tscore = ?, plays = ? where id = ?',
+            'UPDATE stats SET rscore = ?, tscore = ?, plays = ? where id = ?',
             [stats.rscore, stats.tscore, stats.plays, s.player.id]
         )
 
