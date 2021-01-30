@@ -105,15 +105,15 @@ class Player:
         rankParam = "pp" if glob.config.pp else "rscore"
         rankBy = stats.pp if glob.config.pp else stats.rscore
         res = await glob.db.fetch(
-            'select count(*) as c from stats '
-            'where {} > ?'.format(rankParam)
+            'SELECT count(*) AS c FROM stats '
+            'WHERE {} > ?'.format(rankParam)
             , [rankBy]
             )
 
         stats.rank = res[0]['c'] + 1
 
         # updates stats
-        await glob.db.execute('update stats set acc = ?, rank = ?, pp = ? where id = ?', [stats.acc, stats.rank, stats.pp, self.id])
+        await glob.db.execute('UPDATE stats SET acc = ?, rank = ?, pp = ? WHERE id = ?', [stats.acc, stats.rank, stats.pp, self.id])
 
 
 
@@ -122,11 +122,27 @@ class Player:
 
 
     
-    async def login(self, password: str):
-        if await glob.db.authUser(id=self.id, password=password):
-            return f'SUCCESS\n{self.id} sex {self.stats.rank} {self.stats.pp if glob.config.pp else self.stats.rscore} {self.stats.droid_acc} {self.name} http://{glob.config.domain}/a/{self.id}'
+    async def login(self, password_hash: str):
+        bcrypt_cache = glob.cache['bcrypt']
+        res = await glob.db.fetch('SELECT id, username, password_hash FROM users where id = ?', [self.id])
 
-        return 'FAILED\nWrong name or password'
+
+        if res:
+            res = res[0]
+            if password_hash in bcrypt_cache:
+                if bcrypt_cache[password_hash] != res['password_hash']:
+                    return await response.login(False, 'Wrong username or password')
+
+                return await response.login(True, self)
+            else:
+                # first login
+                if not bcrypt.checkpw(password_hash.encode(), res['password_hash'].encode()):
+                    return await response.login(False, 'Wrong username or password')
+
+                bcrypt_cache[password_hash] = res['password_hash']
+                return await response.login(True, self)
+
+        return await response.login(False, 'Wrong username or password')
 
 
 
