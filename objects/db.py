@@ -121,16 +121,16 @@ class sqliteDB:
     # osu shit starts here
     async def idFromName(self, name: str):
         name = name.lower()
-        res = await self.fetch('select id from users where username_safe == ?', [name])
+        res = await self.fetch('SELECT id FROM users WHERE username_safe == ?', [name])
         return res[0]['id'] if res else -1
 
 
     async def userStats(self, id: int):
-        res = await self.fetch('select * from stats where id = ?', [id])
+        res = await self.fetch('SELECT * FROM stats WHERE id = ?', [id])
         return res[0] if res else {}
 
     async def userInfo(self, id: int):
-        res = await self.fetch('select * from users where id = ?', [id])
+        res = await self.fetch('SELECT * FROM users WHERE id = ?', [id])
         return res[0] if res else {}
 
 
@@ -147,7 +147,7 @@ class sqliteDB:
 
     async def allPlayer(self):
         ''' meme function '''
-        return await self.fetch('select * from users')
+        return await self.fetch('SELECT * FROM users')
 
     async def authUser(self, id:int, password: str):
         ''' bruh moment '''
@@ -161,17 +161,17 @@ class sqliteDB:
     # gameplay stuff?
     async def leaderboard(self, mapHash: str):
         order_by = 'pp' if glob.config.pp_leaderboard else 'score'
-        res = await self.fetchall(f'select * from scores where maphash = ? order by {order_by} desc', [mapHash])
+        res = await self.fetchall(f'SELECT * FROM scores WHERE maphash = ? ORDER BY {order_by} DESC', [mapHash])
 
         return res if res else {}
 
     async def getPlay(self, id: int):
-        res = await self.fetch('select * from scores where id = ?', [id])
+        res = await self.fetch('SELECT * FROM scores WHERE id = ?', [id])
 
         return res[0] if res else {}
 
     async def userScore(self, id: int, mapHash: str):
-        res = await self.fetch('select * from scores where playerID = ? and mapHash = ?', [id, mapHash])
+        res = await self.fetch('SELECT * FROM scores WHERE playerID = ? AND mapHash = ?', [id, mapHash])
         return res[0] if res else {}
 
 
