@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-import logging  #, bcrypt
+import logging, bcrypt
 
 from objects import glob
+from utils import response
 
 
 @dataclass
@@ -21,16 +22,21 @@ class Stats:
         acc = float(self.acc) * 1000
         return str(acc).split('.')[0]
 
+    @property
+    def rankBy(self):
+        return self.pp if glob.config.pp else self.rscore
+
 
 class Player:
     def __init__(self, **kwargs):
         self.id = kwargs.get('id')
         self.prefix = kwargs.get('prefix', '')
         self.name = kwargs.get('name')
-        self.pw_bcrypt = kwargs.get('pswd') # meme not used
         self.safe_name = self.make_safe(self.name) if self.name else None
         self.stats: Stats = None
         self.sign = kwargs.get('sign')
+
+        #self.pw_bcrypt = kwargs.get('pswd') # thinking
 
     def __repr__(self):
         return f'<{self.name} - {self.id}>'
