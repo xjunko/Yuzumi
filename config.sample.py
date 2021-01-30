@@ -13,8 +13,11 @@ cron_delay = 1  # used for updating user stats
 ## RANKING ##
 
 #- GLOBAL -#
-pp = False                 # enable to use pp system (not recommended atm)
-osu_key = 'YOURAPIKEYHERE' # used for beatmap info, unused if pp is disabled
+# enable to use pp system
+pp = False                 
+# used for beatmap info, unused if pp is disabled
+osu_key = 'YOURAPIKEYHERE' 
 
 #- MAP LEADERBOARD -#
-pp_leaderboard = False # shows pp instead of score
+pp_leaderboard = False # Shows pp instead of score and sort by pp
+

@@ -13,7 +13,7 @@
 
 ## Features
 * Custom avatar server (need .apk modification to work)
-* PP System (not recommended to use as the implementation of it is retarded)
+* PP System (osu!std pp system)
 * Fully-working osu!droid server
 * Insert more :)
 
