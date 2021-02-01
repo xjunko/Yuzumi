@@ -1,10 +1,13 @@
 from aiohttp import web
 from enum import IntEnum, unique
 from objects import glob
+from pathlib import Path
 
 import logging
 
-async def make_response(status:bool = None, *args:list):
+
+### DROID
+def make_response(status:bool = None, *args:list):
     res = ''
 
     if status == True:
@@ -15,17 +18,17 @@ async def make_response(status:bool = None, *args:list):
     res += ' '.join([str(x) for x in args])
     return web.Response(text=res)
 
-### DROID
-async def normal(s: bool, *res: list):
-    return await make_response(s, *res)
 
-async def leaderboard(plays: list):
+def normal(s: bool, *res: list):
+    return make_response(s, *res)
+
+def leaderboard(plays: list):
     args = ['\n'.join(plays)]
-    return await make_response(True, *args)
+    return make_response(True, *args)
 
-async def login(s: bool, reason: str = None):
+def login(s: bool, reason: str = None):
     if s == False:
-        return await make_response(s, reason)
+        return make_response(s, reason)
 
     elif s == True:
         args = []
@@ -42,13 +45,26 @@ async def login(s: bool, reason: str = None):
             f'http://{glob.config.domain}/a/{p.id}'
             ])
 
-        return await make_response(s, *args)
+        return make_response(s, *args)
 
 
 
 ### NORMAL 
-async def text(t: str):
-    return web.Response(text=t)
+def Response(d: 'any', **kwargs):
+    if 'file' in kwargs:
+        d = Path(d)
 
-async def json(j: dict):
-    return web.json_response(j)
+
+    if isinstance(d, str):
+        return web.Response(text=d)
+
+    elif isinstance(d, (dict, list)):
+        return web.json_response(d)
+
+    elif isinstance(d, Path):
+        return web.FileResponse(path=d)
+
+    else:
+        logging.error("Undefined Response!")
+        return web.Response(text=f'Unsupported Response, {str(d)}')
+

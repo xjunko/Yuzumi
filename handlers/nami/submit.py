@@ -17,16 +17,16 @@ async def submit_score(request):
     # print(p.sign, params['sign'])
 
     if not p:
-        return await response.normal(False, 'Player not found.')
+        return response.normal(False, 'Player not found.')
 
     if glob.config.disable_submit:
-        return await response.normal(False, "Score submission is disabled right now.")
+        return response.normal(False, "Score submission is disabled right now.")
 
 
     if (mapHash := params.get('hash')):
         p.stats.playing = mapHash
         logging.debug(f'changed {p} playing to {mapHash}')
-        return await response.normal(True, 1, p.id)
+        return response.normal(True, 1, p.id)
 
     elif playData := params.get('data'):
         s = await Score.from_submission(playData)
@@ -34,7 +34,7 @@ async def submit_score(request):
         if not s:
             # logging.debug('shit wtf')
             # pretty sure this one just crash the client
-            return await response.normal(False, 'Nope.')
+            return response.normal(False, 'Nope.')
 
         if s.status == SubmissionStatus.BEST:
             # fuck off other score into status 1 (submitted)
@@ -79,7 +79,7 @@ async def submit_score(request):
 
         # fuck my ass i hope this works
         #res = f'SUCCESS\n{int(stats.rank)} {int(stats.pp) if glob.config.pp else int(stats.rscore)} {stats.droid_acc} {s.rank} {s.id if upload_replay else ""}'
-        return await response.normal(True,
+        return response.normal(True,
                                      int(stats.rank), 
                                      int(stats.rankBy),
                                      stats.droid_acc,
@@ -92,4 +92,4 @@ async def submit_score(request):
 
         
 
-    return await response.normal(False, "Something fucked up.")
+    return response.normal(False, "Something fucked up.")

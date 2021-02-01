@@ -127,18 +127,18 @@ class Player:
             res = res[0]
             if password_hash in bcrypt_cache:
                 if bcrypt_cache[password_hash] != res['password_hash']:
-                    return await response.login(False, 'Wrong username or password')
+                    return response.login(False, 'Wrong username or password')
 
-                return await response.login(True, self)
+                return response.login(True, self)
             else:
                 # first login
                 if not bcrypt.checkpw(password_hash.encode(), res['password_hash'].encode()):
-                    return await response.login(False, 'Wrong username or password')
+                    return response.login(False, 'Wrong username or password')
 
                 bcrypt_cache[password_hash] = res['password_hash']
-                return await response.login(True, self)
+                return response.login(True, self)
 
-        return await response.login(False, 'Wrong username or password')
+        return response.login(False, 'Wrong username or password')
 
 
 

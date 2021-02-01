@@ -1,7 +1,7 @@
 from aiohttp import web
 from objects import glob
 
-from utils import response
+from utils.response import Response
 
 import pyfiglet
 
@@ -25,4 +25,4 @@ Wish you were here?... (I know you do)
 
     res += f'Players: {len(glob.players)}'    
 
-    return await response.text(res)
+    return Response(res)

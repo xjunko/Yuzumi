@@ -19,18 +19,18 @@ async def register(request):
     # checking
     # name length
     if len(name) > 16:
-        return await response.normal(False, 'Name too long.')
+        return response.normal(False, 'Name too long.')
 
 
     # check device_id
     res = await glob.db.fetch(f'SELECT * FROM users WHERE device_id = ?', [deviceID])
     if res:
-        return await response.normal(False, 'Device already registered.')
+        return response.normal(False, 'Device already registered.')
 
     # check username
     res = await glob.db.fetch(f'SELECT * FROM users WHERE username_safe = ?', [name])
     if res:
-        return await response.normal(False, 'Username already exists.')
+        return response.normal(False, 'Username already exists.')
 
     # register fr
     password_bcrypt = bcrypt.hashpw(password_hash.encode(), bcrypt.gensalt()).decode()
@@ -57,6 +57,6 @@ async def register(request):
     await p.fromSQL()
     glob.players.append(p)
 
-    return await response.normal(True, 'Account Created!')
+    return response.normal(True, 'Account Created!')
 
 

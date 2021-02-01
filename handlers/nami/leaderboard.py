@@ -30,9 +30,9 @@ async def map_leaderboard(request):
             ))
 
     if args:
-        return await response.leaderboard(args)
+        return response.leaderboard(args)
     else:
-        return await response.normal(True)
+        return response.normal(True)
 
     
 
@@ -58,9 +58,9 @@ async def view_leaderboard_play(request):
 
         )
 
-        return await response.normal(True, res)
+        return response.normal(True, res)
     
 
-    return await response.normal(False)
+    return response.normal(False)
 
 

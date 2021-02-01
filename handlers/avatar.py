@@ -1,6 +1,8 @@
 from aiohttp import web
 import aiofiles, os
 
+from utils.response import Response
+
 
 async def view_avatar(request):
     filename_id = request.match_info['avatar_id']
@@ -10,7 +12,7 @@ async def view_avatar(request):
     if not os.path.isfile(f'data/avatar/{filename_id}.png'):
         filename_id = -1
 
-    return web.FileResponse(path=f'data/avatar/{filename_id}.png')
+    return Response(f'data/avatar/{filename_id}.png', file=True)
 
 
 

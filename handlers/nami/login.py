@@ -9,17 +9,17 @@ async def login(request):
     params = await helpers.readParam(request)
     
     if 'username' not in params or len(params['username']) == 0:
-        return await response.login(False, 'No username given.')
+        return response.login(False, 'No username given.')
     
     
     p = await glob.players.get(name=params['username'])
 
     if not p:
-        return await response.login(False, 'Player not found.')
+        return response.login(False, 'Player not found.')
 
     if (res := await p.login(password_hash=params['password'])):
         logging.info(f'{p} is attempting to login!')
         return res
 
-
-    return res # weird
+    if res:
+        return res # ?????
