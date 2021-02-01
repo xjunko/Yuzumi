@@ -5,7 +5,7 @@ from aiohttp.abc import AbstractAccessLogger
 
 
 # fuck my life
-from handlers.nami.index import index
+from handlers.nami.index import index, f as figlet
 from handlers.nami.replay import view_replay, upload_replay
 from handlers.nami.login import login
 from handlers.nami.leaderboard import view_leaderboard_play, map_leaderboard
@@ -112,6 +112,7 @@ def main():
     helpers.checkFolder()
 
     try:
+        print(figlet.renderText(glob.config.server_name))
         web.run_app(app, port=glob.config.port, host=glob.config.host, access_log_class=access_log)
     except RuntimeError:
         print('...bye')
