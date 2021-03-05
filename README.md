@@ -1,3 +1,4 @@
+## I'm gonna do a rewrite, just wait for 2 years
 <h2 align="center">
 	osu!droid Server
 </h2>
