@@ -1,8 +1,9 @@
+def args_join(args):
+  return ' '.join([str(x) for x in args])
+
 def Success(*args: list):
-  reason = ' '.join([str(x) for x in args])
-  return f'SUCCESS\n{reason}'
+  return f'SUCCESS\n{args_join(args)}'
 
 def Failed(*args: list):
-  reason = ' '.join([str(x) for x in args])
-  return f'FAILED\n{reason}'
+  return f'FAILED\n{args_join(args)}'
 
