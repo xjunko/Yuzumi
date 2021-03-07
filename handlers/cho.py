@@ -113,7 +113,7 @@ async def leaderboard():
       rank = play['rank'],
       mods = play['mods'],
       acc = int(play['acc']*1000),
-      gravatar_hash = '35da3c1a5130111d0e3a5f353389b476'
+      gravatar_hash = p.id # ... might want to drop the custom avatar idea and use gravatar instead
     )]
 
 
