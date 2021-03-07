@@ -9,6 +9,7 @@ __pycache__/
 # shit
 config.py
 data.db
+*.db
 
 data/release/*
 data/replays/*
