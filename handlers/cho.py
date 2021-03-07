@@ -50,7 +50,7 @@ async def login():
     rank_by = p.stats.rank_by,
     acc = p.stats.droid_acc,
     name = p.name,
-    avatar = f'https://{glob.config.domain}/avatar/12164982' # yes
+    avatar = f'https://{glob.config.domain}/avatar/{p.id}' # mmm idk man
   )
 
 
