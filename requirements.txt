@@ -1,5 +1,0 @@
-aiohttp
-aiosqlite
-pyfiglet
-aiofiles
-git+https://github.com/The-CJ/oppadc.py.git#egg=oppadc
