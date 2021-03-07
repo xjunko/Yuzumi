@@ -44,14 +44,14 @@ async def login():
   p.last_online = time.time()
 
   # returns long string of shit
-  return 'SUCCESS\n{id} - {rank} {rank_by} {acc} {name} {avatar}'.format(
+  return Success('{id} - {rank} {rank_by} {acc} {name} {avatar}'.format(
     id = p.id,
     rank = p.stats.rank,
     rank_by = p.stats.rank_by,
     acc = p.stats.droid_acc,
     name = p.name,
     avatar = f'https://{glob.config.domain}/avatar/{p.id}' # mmm idk man
-  )
+  ))
 
 
 @bp.route('/register.php', methods=['POST'])
