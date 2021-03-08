@@ -6,7 +6,8 @@ host = '0.0.0.0'             #
 
 ## CRON ##
 # 1 = 1 Minute
-cron_delay = 1  # used for updating user stats
+cron_delay = 10  # used for updating user stats, if your server is big, you might want to set it to 60 or higher to
+                 # make sure your server doesnt die lol
 
 ## RANKING ##
 #- GLOBAL -#
