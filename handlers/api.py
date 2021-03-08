@@ -35,6 +35,9 @@ async def get_user():
   args = request.args
 
   p = get_player(args)
+  if isinstance(p, tuple):
+    return p
+
   if not p:
     return 'Player not found', 404
 
@@ -48,6 +51,9 @@ async def get_scores():
   limit = min(params.get('limit', 50), 50)
 
   p = get_player(params)
+  if isinstance(p, tuple):
+    return p
+    
   if not p:
     return 'Player not found', 404
 
