@@ -81,7 +81,7 @@ async def register():
     None,
     None,
     params['email'],
-    hashlib.md5(param['email'].encode()).hexdigest(), # long
+    utils.make_md5(params['email']),
     0
   ])
   # also create stats table
