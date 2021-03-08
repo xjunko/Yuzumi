@@ -14,6 +14,7 @@ from handlers.response import Failed
 
 #
 import utils
+from utils import pp
 
 def make_app():
   app = Quart(__name__)
@@ -33,9 +34,10 @@ app = make_app()
 async def init_shit():
   # check folder
   utils.check_folder()
-
   # connect to db
   await glob.db.connect()
+  # recalc pp (Testing)
+  # await pp.recalc_scores()
 
   # init players
   player_ids = await glob.db.fetchall("SELECT id FROM users where id != -1")
