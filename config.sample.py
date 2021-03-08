@@ -17,5 +17,5 @@ pp_leaderboard = False # Shows pp instead of score and sort by pp
 osu_key = 'YOURAPIKEYHERE'
 
 #- MAINTENACE -#
-disable_submit = False # Does what it does, shows a message to user when trying to play submit a play.
+disable_submit = False # Does what it says and shows a message to user when trying to play submit a play.
 
