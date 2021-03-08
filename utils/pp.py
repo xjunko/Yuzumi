@@ -61,7 +61,7 @@ def modsBitsFromDroidStr(mods: str):
 class PPCalculator:
     """ https://github.com/cmyui/gulag/blob/master/utils/recalculator.py
 
-    
+
         also it uses cpol's pp api so thats fucking retarded
 
         TODO:
@@ -140,13 +140,10 @@ class PPCalculator:
         return pp.total_pp
 
 
-
-"""
 async def recalc_scores():
     ''' never use this unless something fucked up/testing '''
     print('recalculatin sk0r3')
 
-    #scores = await glob.db.fetchall('select * from scores where pp = 0')
     scores = await glob.db.fetchall('select * from scores where status = 2')
     for score in scores:
         m = await PPCalculator.from_md5(score['mapHash'])
@@ -154,12 +151,11 @@ async def recalc_scores():
             m.acc = score['acc']
             m.nmiss = score['hitmiss']
             m.combo = score['combo']
-            mods = droidMods(score['mods'])
-            m.mods = osuMods[mods.name].value
+            m.mods = modsBitsFromDroidStr(score['mods'])
 
             pp = await m.calc()
 
-            print(score['mapHash'], pp.total_pp)
+            print(score['mapHash'], pp)
 
 
-"""
+
