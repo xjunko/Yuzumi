@@ -50,7 +50,7 @@ async def login():
   # returns long string of shit
   return Success('{id} {uuid} {rank} {rank_by} {acc} {name} {avatar}'.format(
     id = p.id,
-    uuid = p.uuid
+    uuid = p.uuid,
     rank = p.stats.rank,
     rank_by = p.stats.rank_by,
     acc = p.stats.droid_acc,
