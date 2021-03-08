@@ -157,5 +157,7 @@ async def recalc_scores():
 
             print(score['mapHash'], pp)
 
+            await glob.db.execute("UPDATE scores SET pp = ? where id = ?", [pp, score['id']])
+
 
 
