@@ -134,7 +134,7 @@ async def view_score():
     play = play[0]
     return Success('{mods} {score} {combo} {rank} {hitgeki} {hit300} {hitkatsu} {hit100} {hitmiss} {hit50} {acc}'.format(
       mods = play['mods'],
-      score = play['pp'] if glob.config.pp else play['score'],
+      score = int(play['pp']) if glob.config.pp else play['score'],
       combo = play['combo'],
       rank = play['rank'],
       hitgeki = play['hitgeki'],
