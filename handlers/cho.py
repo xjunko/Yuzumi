@@ -114,14 +114,13 @@ async def leaderboard():
     res += ['{play_id} {name} {score} {combo} {rank} {mods} {acc} {gravatar_hash}'.format(
       play_id = play['id'],
       name = player.name,
-      score = play['pp'] if glob.config.pp else play['score'],
+      score = int(play['pp']) if glob.config.pp else play['score'],
       combo = play['combo'],
       rank = play['rank'],
       mods = play['mods'],
       acc = int(play['acc']*1000),
       gravatar_hash = player.email_hash # use gravatar
     )]
-
 
   return Success('\n'.join(res))
 
