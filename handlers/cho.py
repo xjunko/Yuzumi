@@ -107,14 +107,14 @@ async def leaderboard():
     return Failed('No map hash.')
 
   res = []
-  plays = await glob.db.fetchall("SELECT * FROM scores where mapHash = ? and status = 2 ORDER BY {order_by} DESC".format(order_by='pp' if glob.config.pp else 'score'), [params['hash']])
+  plays = await glob.db.fetchall("SELECT * FROM scores where mapHash = ? and status = 2 ORDER BY {order_by} DESC".format(order_by='pp' if glob.config.pp_leaderboard else 'score'), [params['hash']])
   for play in plays:
     player = glob.players.get(id=int(play['playerID']))
 
     res += ['{play_id} {name} {score} {combo} {rank} {mods} {acc} {gravatar_hash}'.format(
       play_id = play['id'],
       name = player.name,
-      score = int(play['pp']) if glob.config.pp else play['score'],
+      score = int(play['pp']) if glob.config.pp_leaderboard else play['score'],
       combo = play['combo'],
       rank = play['rank'],
       mods = play['mods'],
@@ -134,7 +134,7 @@ async def view_score():
     play = play[0]
     return Success('{mods} {score} {combo} {rank} {hitgeki} {hit300} {hitkatsu} {hit100} {hitmiss} {hit50} {acc}'.format(
       mods = play['mods'],
-      score = int(play['pp']) if glob.config.pp else play['score'],
+      score = int(play['pp']) if glob.config.pp_leaderboard else play['score'],
       combo = play['combo'],
       rank = play['rank'],
       hitgeki = play['hitgeki'],
