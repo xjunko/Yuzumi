@@ -1,9 +1,10 @@
 import logging
 import time
+import hashlib
 from dataclasses import dataclass
 
 from objects import glob
-from utils import make_safe
+import utils
 
 
 @dataclass
@@ -45,7 +46,7 @@ class Player:
     self.id: str = kwargs.get('id')
     self.prefix: str = kwargs.get('prefix', '')
     self.name: str = kwargs.get('username')
-    self.name_safe: str = make_safe(self.name) if self.name else None
+    self.name_safe: str = utils.make_safe(self.name) if self.name else None
 
     self.last_online: float = 0
     self.email_hash: str = kwargs.get('email_hash', '35da3c1a5130111d0e3a5f353389b476') # used for gravatar, default to my pfp lole
@@ -72,11 +73,24 @@ class Player:
 
   @classmethod
   async def from_sql(cls, user_id: int):
-    user_data = await glob.db.fetch("SELECT id, prefix, username FROM users WHERE id = ?", [user_id])
+    user_data = await glob.db.fetch("SELECT id, prefix, username, email_hash, email FROM users WHERE id = ?", [user_id])
     user_stats = await glob.db.fetch("SELECT * FROM stats WHERE id = ?", [user_id])
 
-    p = cls(**user_data[0])
-    p.stats = Stats(**user_stats[0])
+    if not user_data or not user_stats:
+      raise Exception('Failed to get user from database.')
+
+    user_data = user_data[0]
+    user_stats = user_stats[0]
+
+    # fix email_hash if its none and user got email (there should be)
+    if user_data['email_hash'] == None and user['email'] != None:
+      email_hash = utils.make_md5(user_data['email'])
+      await glob.db.execute('UPDATE users SET email_hash = ? WHERE id ?', [email_hash, user_id])
+
+    user_data.pop('email', None)
+
+    p = cls(**user_data)
+    p.stats = Stats(**user_stats)
 
     return p
 
