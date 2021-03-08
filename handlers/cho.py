@@ -169,6 +169,9 @@ async def upload_replay():
   path = f'data/replays/{replay_id}.odr' # doesnt have .odr
   raw_replay = (await request.data)[191:][:-48]
 
+  if raw_replay[:2] != b'PK':
+    return Failed('Fuck off lol.')
+
   if os.path.isfile(path):
     return Failed('File already exists.')
 
