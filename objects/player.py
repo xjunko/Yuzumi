@@ -48,8 +48,12 @@ class Player:
     self.name: str = kwargs.get('username')
     self.name_safe: str = utils.make_safe(self.name) if self.name else None
 
-    self.last_online: float = 0
+    #
     self.email_hash: str = kwargs.get('email_hash', '35da3c1a5130111d0e3a5f353389b476') # used for gravatar, default to my pfp lole
+    self.uuid: str = kwargs.get('uuid', None) # ...yea
+
+
+    self.last_online: float = 0
     self.stats: Stats = None
 
   def __repr__(self):

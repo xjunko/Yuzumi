@@ -2,7 +2,6 @@ import os
 import logging
 import copy
 import time
-import hashlib
 from quart import Blueprint, request, send_file
 
 from objects import glob
@@ -44,9 +43,14 @@ async def login():
   # update last ping
   p.last_online = time.time()
 
+  # make uuid if havent
+  if not p.uuid:
+    p.uuid = utils.make_uuid(p.name)
+
   # returns long string of shit
-  return Success('{id} - {rank} {rank_by} {acc} {name} {avatar}'.format(
+  return Success('{id} {uuid} {rank} {rank_by} {acc} {name} {avatar}'.format(
     id = p.id,
+    uuid = p.uuid
     rank = p.stats.rank,
     rank_by = p.stats.rank_by,
     acc = p.stats.droid_acc,
@@ -190,13 +194,17 @@ async def submit_play():
   if not p:
     return Failed('Player not found, report to server admin.')
 
+  if 'ssid' in params:
+    if params['ssid'] != p.uuid:
+      return Failed('Mismatch UUID, please relogin.')
+
   if glob.config.disable_submit:
     return Failed('Score submission is disable right now.')
 
   if (map_hash := params.get('hash', None)):
     logging.info(f'Changed {p} playing to {map_hash}')
     p.stats.playing = map_hash
-    return Success(1, p.id) # forgot what the 1 did
+    return Success(1, p.id)
 
   elif (play_data := params.get('data')):
     s = await Score.from_submission(play_data)
