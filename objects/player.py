@@ -89,7 +89,7 @@ class Player:
     # fix email_hash if its none and user got email (there should be)
     if user_data['email_hash'] == None and user_data['email'] != None:
       email_hash = utils.make_md5(user_data['email'])
-      await glob.db.execute('UPDATE users SET email_hash = ? WHERE id ?', [email_hash, user_id])
+      await glob.db.execute('UPDATE users SET email_hash = ? WHERE id = ?', [email_hash, user_id])
 
     user_data.pop('email', None)
 

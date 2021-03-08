@@ -244,7 +244,7 @@ async def submit_play():
 
     ## Update Ranked Score stats to db
     await glob.db.execute(
-      'UPDATE stats SET rscore = ?, tscore = ?, plays = ? where id = ?',
+      'UPDATE stats SET rscore = ?, tscore = ?, plays = ? WHERE id = ?',
       [stats.rscore, stats.tscore, stats.plays, s.player.id])
 
     ## Update stats one more time - i know this is retarded cuz we're already doing it above but im basing it from the old code so
