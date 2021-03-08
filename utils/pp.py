@@ -137,7 +137,7 @@ async def recalc_scores():
     ''' never use this unless something fucked up/testing '''
     print('recalculatin sk0r3')
 
-    scores = await glob.db.fetchall('select * from scores where status = 2')
+    scores = await glob.db.fetchall('select * from scores where status = 2 and pp = 0')
     for score in scores:
         m = await PPCalculator.from_md5(score['mapHash'])
         if m:
