@@ -4,7 +4,7 @@ def make_safe(n: str):
   return n.lower().replace(' ', '_')
 
 def check_folder():
-  required_folders = ['avatars', 'replays', 'beatmaps']
+  required_folders = ['replays', 'beatmaps']
 
   if not os.path.isdir('data'):
     os.mkdir('data')

@@ -2,6 +2,7 @@ import os
 import logging
 import copy
 import time
+import hashlib
 from quart import Blueprint, request, send_file
 
 from objects import glob
@@ -50,7 +51,7 @@ async def login():
     rank_by = p.stats.rank_by,
     acc = p.stats.droid_acc,
     name = p.name,
-    avatar = f'https://{glob.config.domain}/avatar/{p.id}' # mmm idk man
+    avatar = f'https://s.gravatar.com/avatar/{p.email_hash}'
   ))
 
 
@@ -69,7 +70,7 @@ async def register():
   if len(params['username']) < 2:
     return Failed("Username must be longer than 2 characters.")
 
-  player_id = await glob.db.execute('INSERT INTO users VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+  player_id = await glob.db.execute('INSERT INTO users VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
   [
     None,
     params['username'],
@@ -80,6 +81,7 @@ async def register():
     None,
     None,
     params['email'],
+    hashlib.md5(param['email'].encode()).hexdigest(), # long
     0
   ])
   # also create stats table
@@ -113,7 +115,7 @@ async def leaderboard():
       rank = play['rank'],
       mods = play['mods'],
       acc = int(play['acc']*1000),
-      gravatar_hash = p.id # ... might want to drop the custom avatar idea and use gravatar instead
+      gravatar_hash = p.email_hash # use gravatar
     )]
 
 

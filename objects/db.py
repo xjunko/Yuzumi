@@ -63,6 +63,7 @@ class sqliteDB:
                 "avatar_id" TEXT,
                 "custom_avatar" TEXT,
                 "email" TEXT,
+                "email_hash"	TEXT,
                 "status"    INTEGER DEFAULT 0,
                 PRIMARY KEY("id" AUTOINCREMENT)
                 );

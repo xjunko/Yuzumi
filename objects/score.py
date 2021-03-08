@@ -117,8 +117,8 @@ class Score:
         s.mods = data[0]
         s.grade = data[3]
         s.acc = float(data[10])/1000
-        s.fc = data[12] == 'true'
-        s.device_id = data[11]
+        s.fc = (data[12] == 'true') or (data[12] == '1') # 1.6.8 Fix
+        s.device_id = data[11] # 1.6.8: Int?
 
         s.pp = await PPCalculator.from_md5(s.mapHash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
 
