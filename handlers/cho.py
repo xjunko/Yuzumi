@@ -7,7 +7,7 @@ from quart import Blueprint, request, send_file
 from objects import glob
 from objects.player import Player
 from objects.score import Score, SubmissionStatus
-from handlers.response import Failed, Success
+from handlers.response import Failed, Success, Failure
 
 import utils
 
@@ -119,7 +119,7 @@ async def leaderboard():
       rank = play['rank'],
       mods = play['mods'],
       acc = int(play['acc']*1000),
-      gravatar_hash = p.email_hash # use gravatar
+      gravatar_hash = player.email_hash # use gravatar
     )]
 
 
