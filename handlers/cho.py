@@ -251,7 +251,7 @@ async def submit_play():
 
     return Success('{rank} {rank_by} {acc} {map_rank} {score_id}'.format(
       rank = int(stats.rank),
-      rank_by = int(stats.rscore),
+      rank_by = int(stats.rank_by),
       acc = stats.droid_acc,
       map_rank = s.rank,
       score_id = s.id if upload_replay else ""
