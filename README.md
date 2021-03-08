@@ -1,3 +1,5 @@
 * score system works
 * pp system works
-* now i need to add password encryption and that should be it.
+* password is hashed with argon2
+* everything is done. (i hope)
+* now only need to do README
