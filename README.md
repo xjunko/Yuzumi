@@ -1,4 +1,5 @@
 ## I'm gonna do a rewrite, just wait for 2 years
+## Lmao master branch sucks
 <h2 align="center">
 	osu!droid Server
 </h2>
