@@ -2,7 +2,9 @@ import os
 import logging
 import copy
 import time
+
 from quart import Blueprint, request, send_file
+from argon2 import PasswordHasher
 
 from objects import glob
 from objects.player import Player
@@ -11,6 +13,7 @@ from handlers.response import Failed, Success, Failure
 
 import utils
 
+ph = PasswordHasher()
 bp = Blueprint('cho', __name__)
 bp.prefix = '/api/'
 
@@ -31,11 +34,18 @@ async def login():
   ## kinda unsafe cuz its just md5
   ## will add bcrypt (optional maybe)
   res = (await glob.db.fetch("SELECT password_hash, status FROM users WHERE id = ?", [p.id]))[0]
-  pswd = res['password_hash']
   status = res['status']
+  pswd_hash = res['password_hash']
+  hashes = glob.cache['hashes']
 
-  if params['password'] != pswd:
-    return Failed("Wrong password.")
+  if pswd_hash in hashes:
+    if params['password'] != hashes[pswd_hash]:
+      return Failed('Wrong password.')
+  else:
+    if not ph.verify(pswd_hash, params['password']):
+      return Failed('Wrong password.')
+
+    hashes[pswd_hash] = params['password']
 
   if status != 0:
     return Failed("Banned.")
@@ -79,7 +89,7 @@ async def register():
     None,
     params['username'],
     utils.make_safe(params['username']),
-    params['password'],
+    ph.hash(params['password']),
     params['deviceID'],
     'NotUsed',
     None,
