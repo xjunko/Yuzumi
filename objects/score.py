@@ -1,4 +1,4 @@
-from objects import glob, db
+from objects import glob
 from enum import IntEnum, unique
 
 from utils.pp import PPCalculator, modsBitsFromDroidStr
