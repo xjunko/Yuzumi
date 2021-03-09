@@ -27,7 +27,7 @@ def make_app():
     app.register_blueprint(route, url_prefix=route.prefix)
   return app
 
-logging.basicConfig(level=logging.INFO)
+
 app = make_app()
 
 @app.before_serving
@@ -94,5 +94,6 @@ async def serve_avatar(player_id: int):
 
 
 if __name__ == '__main__':
-  app.run(port=80, use_reloader=False, host='0.0.0.0')
+  logging.basicConfig(level=logging.DEBUG)
+  app.run(port=80, use_reloader=False, host='0.0.0.0', debug=True)
 
