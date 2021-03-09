@@ -19,6 +19,11 @@
 ## Todo
 * MySQL Support
 
+## Preview (with PP system)
+![Main Menu](https://cdn.discordapp.com/attachments/703552229680087042/818712990916411432/Screenshot_2021-03-09-13-09-54-85.jpg)
+![Leaderboard(pp)](https://cdn.discordapp.com/attachments/703552229680087042/818712991201361950/Screenshot_2021-03-09-13-11-09-33.jpg)
+![Play Submit](https://cdn.discordapp.com/attachments/703552229680087042/818712991435456522/Screenshot_2021-03-09-13-12-30-75.jpg)
+
 ## Requirements
 * [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator, (you can use your os default console, this is just for aesthetic if anything).
 * [Python 3.8+](https://www.python.org/downloads/release/python-386/) (Recommended: Python 3.8.6)
