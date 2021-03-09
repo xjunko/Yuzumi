@@ -20,7 +20,7 @@
 * MySQL Support
 
 ## Requirements
-* [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator.
+* [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator, (you can use your os default console, this is just for aesthetic if anything).
 * [Python 3.8+](https://www.python.org/downloads/release/python-386/)
 * [Notepad++](https://notepad-plus-plus.org/downloads/)
 * Python and general-programming knowledge.
@@ -31,6 +31,7 @@
 * Copy `config.sample.py` and name it `config.py`
 * Edit `config.py`, [osu!api](https://old.ppy.sh/p/api) (optional unless you're using pp system)
 * That's it. You can setup nginx and those web stuff if you want.
+* To run you can use `python3.8 main.py` (Development) or `hypercorn main.py` (Production)
 
 ## Setting up (client)
 There's two way of doing this, hosts and modified .apk. <br/>
