@@ -94,6 +94,6 @@ async def serve_avatar(player_id: int):
 
 
 if __name__ == '__main__':
-  logging.basicConfig(level=logging.DEBUG)
-  app.run(port=80, use_reloader=False, host='0.0.0.0', debug=True)
+  logging.basicConfig(level=logging.INFO)
+  app.run(port=80, use_reloader=False, host='0.0.0.0', debug=False)
 
