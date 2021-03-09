@@ -43,7 +43,7 @@ Hosts method is better since you can change between servers without downloading 
 * That's it
 
 ### Apk
-There's also two way of doing this, build from sources or modified .apk.<br/>
+There's also two way of doing this, build from sources and modified .apk.<br/>
 Since I don't commit java, we're going with the latter.
 
 You need java installed for this (the same one that you need for Minecraft :>)
