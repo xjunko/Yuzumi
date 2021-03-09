@@ -1,4 +1,5 @@
 quart
+coloredlogs
 aiosqlite
 aiohttp
 aiofiles

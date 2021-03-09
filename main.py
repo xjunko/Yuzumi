@@ -1,6 +1,7 @@
 import logging
 import asyncio
 import os
+import coloredlogs
 from quart import Quart, Response, send_file
 
 # sus
@@ -94,6 +95,7 @@ async def serve_avatar(player_id: int):
 
 
 if __name__ == '__main__':
-  logging.basicConfig(level=logging.INFO)
+  #logging.basicConfig(level=logging.INFO)
+  coloredlogs.install(milliseconds=True)
   app.run(port=80, use_reloader=False, host='0.0.0.0', debug=False)
 
