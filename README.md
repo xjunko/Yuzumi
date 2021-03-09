@@ -13,7 +13,7 @@
 
 ## Features
 * _Fully-working_ osu!droid server
-* PP System (osu!std pp system)
+* PP System (osu!std pp system + TD mod by default, will add osu!droid's pp system)
 * Insert more :)
 
 ## Todo
