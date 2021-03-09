@@ -60,5 +60,4 @@ Update: There's a script for this now, you can use that if you're retarded or la
 
 
 ## Disclaimer
-This is my first time working with this kind of stuff so if I do stupid stuff please say so :)
-
+im retarded
