@@ -107,6 +107,9 @@ class Score:
             # refer to gulag score.py
             return s
 
+        if not s.player.stats.playing:
+            raise Exception('Recent play not found.')
+
         s.mapHash = s.player.stats.playing
         s.pp = await PPCalculator.from_md5(s.mapHash)
 

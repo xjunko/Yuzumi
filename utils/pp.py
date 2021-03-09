@@ -83,7 +83,7 @@ class PPCalculator:
     def __init__(self, path: Path, **kwargs):
             self.bm_path = path
 
-            self.mods = modsBitsFromDroidStr(kwargs.get('mods', '-'))
+            self.mods = convert_droid(kwargs.get('mods', '-'))
             self.combo = kwargs.get('combo', 0)
             self.nmiss = kwargs.get('nmiss', 0)
             self.acc = kwargs.get('acc', 100.00)
