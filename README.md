@@ -7,7 +7,7 @@
 </h4>
 
 <p align="center">
-	<img height=300 src="https://files.catbox.moe/1jhzz0.jpg" alt="anime girl doing anime stuff">
+	<img height=300 src="https://cdn.discordapp.com/attachments/716590826729504788/818733799256621056/yuzumi_yuzuhara.jpg" alt="lole">
 </p>
 
 
