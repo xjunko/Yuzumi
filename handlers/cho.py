@@ -42,7 +42,9 @@ async def login():
     if params['password'] != hashes[pswd_hash]:
       return Failed('Wrong password.')
   else:
-    if not ph.verify(pswd_hash, params['password']):
+    try:
+      ph.verify(pswd_hash, params['password'])
+    except:
       return Failed('Wrong password.')
 
     hashes[pswd_hash] = params['password']
