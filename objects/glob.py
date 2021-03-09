@@ -1,12 +1,8 @@
-from objects import db
-from objects.collections import PlayerList
-
 import config
+from .collections import PlayerList
 
-db: 'Database' = db.sqliteDB()
 players: PlayerList = PlayerList()
 
-
-cache = {
-    'bcrypt': {}
+cache: dict = {
+  'hashes': {}
 }

@@ -1,5 +1,7 @@
-aiohttp
+quart
 aiosqlite
-pyfiglet
+aiohttp
 aiofiles
+hypercorn
 git+https://github.com/The-CJ/oppadc.py.git#egg=oppadc
+argon2-cffi

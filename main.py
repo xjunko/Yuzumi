@@ -1,124 +1,99 @@
-import asyncio
 import logging
-from aiohttp import web
-from aiohttp.abc import AbstractAccessLogger
+import asyncio
+import os
+from quart import Quart, Response, send_file
 
-
-# fuck my life
-from handlers.nami.index import index, f as figlet
-from handlers.nami.replay import view_replay, upload_replay
-from handlers.nami.login import login
-from handlers.nami.leaderboard import view_leaderboard_play, map_leaderboard
-from handlers.nami.submit import submit_score
-from handlers.nami.register import register
-
-from handlers.avatar import view_avatar
-from handlers.download import download_apk
-
-# api
-from handlers import api
-
-from cron.cron import cron_loop
-
-#
-from objects import glob, score
+# sus
+from objects import glob
 from objects.player import Player
+from objects.db import sqliteDB
+
+# handlers
+from handlers import (cho, api)
+from handlers.response import Failed
 
 #
-import helpers
+import utils
+from utils import pp
+
+def make_app():
+  app = Quart(__name__)
+  glob.db = sqliteDB()
+
+  # routes shit idk
+  routes = [cho, api]
+
+  for route in routes:
+    app.register_blueprint(route, url_prefix=route.prefix)
+  return app
 
 
-def add_routes(app: web.Application):
-    ''' meme '''
-    app.router.add_get('/', index)
+app = make_app()
 
-    routes = [
-        # cho stuff
-        ('/api/upload/{replay_id}', 'GET', view_replay),
-        ('/api/upload.php', 'POST', upload_replay),
-        ('/api/login.php', 'POST', login),
-        ('/api/getrank.php', 'POST', map_leaderboard),
-        ('/api/gettop.php', 'POST', view_leaderboard_play),
-        ('/api/submit.php', 'POST', submit_score),
-        ('/api/register.php', 'POST', register),
+@app.before_serving
+async def init_shit():
+  # check folder
+  utils.check_folder()
+  # connect to db
+  await glob.db.connect()
+  # recalc pp (Testing)
+  # await pp.recalc_scores()
 
-        # shit that is not cho stuff
-        ('/a/{avatar_id}', 'GET', view_avatar),
-        ('/avatar/{avatar_id}', 'GET', view_avatar),
-        ('/d/release', 'GET', download_apk),
-
-        # api
-        ('/api/get_stats', 'GET', api.get_stats),
-        ('/api/leaderboard', 'GET', api.leaderboard)
-
-    ]
-
-    for path, method, handler in routes:
-        logging.debug(f'adding {handler.__name__} [{method}]')
-        app.router.add_routes([web.route(method, path, handler)])
+  # init players
+  player_ids = await glob.db.fetchall("SELECT id FROM users where id != -1")
+  for id in player_ids:
+    p = await Player.from_sql(id['id']) # mega sus
+    glob.players.add(p)
 
 
 
-async def init(loop):
-    ''' initiate cock and balls '''
-    app = web.Application()
-    await glob.db.connect(filename='data.db')
+  async def background_tasks():
+    async def update_players_stats():
+        for p in glob.players:
+          await p.update_stats()
 
-    asyncio.create_task(cache_players())
-    asyncio.create_task(cron_loop())
+    tasks = [update_players_stats]
+    for task in tasks:
+      try:
+        await task()
+      except Exception as err:
+        logging.error(f'Failed to complete task: {repr(err)}')
 
-
-    #await recalc_scores()
-    #app.on_startup.append(cache_players)
-    app.on_shutdown.append(shutdown)
-    return app
-
-async def shutdown(app):
-    await glob.db.close()
-
-async def cache_players(app=None):
-    players = await glob.db.allPlayer()
-    for player in players:
-        #if player['id'] == -1:
-            #continue
+    await asyncio.sleep(glob.config.cron_delay*60)
 
 
-        p = Player(id=int(player['id']), name=player['username'], prefix=player['prefix'], sign=player['sign'])
-        await p.fromSQL()
-        await p.update_stats()
-        glob.players.append(p)
 
-        logging.debug('done caching')
+  # run the background task
+  asyncio.ensure_future(background_tasks())
 
 
-    
 
-class access_log(AbstractAccessLogger):
-    def log(self, request, response, time):
-        self.logger.info(f'{request.remote} '
-                         f'"{request.method}" {request.path}'
-                        )
+@app.after_serving
+async def close_shit():
+  await glob.db.close()
 
+@app.errorhandler(500)
+async def server_fucked(err):
+  return Failed(f'Server Error: {repr(err)}')
 
-def main():
-    logging.basicConfig(level=logging.INFO)
+@app.route('/')
+async def index():
+  return {
+    'players': len(glob.players),
+    'online': len([_ for _ in glob.players if _.online]),
+    'title': 'when the impostor is sus'
+  }
 
-    # do shit
-    loop = asyncio.get_event_loop()
-    app = loop.run_until_complete(init(loop))
-    add_routes(app)
+@app.route('/avatar/<int:player_id>')
+async def serve_avatar(player_id: int):
 
-    # check folders
-    helpers.checkFolder()
+  if not os.path.isfile(f'data/avatars/{player_id}.png'):
+    player_id = -1
 
-    try:
-        print(figlet.renderText(glob.config.server_name))
-        web.run_app(app, port=glob.config.port, host=glob.config.host, access_log_class=access_log)
-    except RuntimeError:
-        print('...bye')
-    except KeyboardInterrupt:
-        print('...bye')
+  return await send_file(f'data/avatars/{player_id}.png')
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+  logging.basicConfig(level=logging.INFO)
+  app.run(port=80, use_reloader=False, host='0.0.0.0', debug=False)
+

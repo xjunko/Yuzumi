@@ -1,7 +1,7 @@
-from objects import glob, db
+from objects import glob
 from enum import IntEnum, unique
 
-from utils.pp import PPCalculator, modsBitsFromDroidStr
+from utils.pp import PPCalculator
 
 @unique
 class SubmissionStatus(IntEnum):
@@ -18,7 +18,7 @@ class SubmissionStatus(IntEnum):
         }[self.value]
 
 class Score:
-    ''' 
+    '''
     i cant wrap my head around score submission so this one is based from gulag
 
     <3 cmyui
@@ -57,25 +57,26 @@ class Score:
 
     @classmethod
     async def from_sql(cls, score_id: int):
-        res = await glob.db.getPlay(score_id)
+        #res = await glob.db.getPlay(score_id)
+        res = await glob.db.fetch("SELECT * FROM scores WHERE id = ?", [score_id])
 
         if not res:
             return
 
         s = cls()
-
+        res = res[0]
         s.id = res['id']
-        s.player = await glob.players.get(id=int(res['playerID']))
+        s.player = glob.players.get(id=int(res['playerID']))
         s.status = SubmissionStatus(res['status'])
         s.mapHash = res['mapHash']
 
-        
+
         s.score = res['score']
         s.max_combo = res['combo']
         s.mods = res['mods']
         s.acc = res['acc']
         s.grade = res['rank']
-        
+
 
         s.h300 = res['hit300']
         s.h100 = res['hit100']
@@ -87,26 +88,28 @@ class Score:
         s.pp = await PPCalculator.from_md5(s.mapHash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
         if s.pp:
             s.pp = await s.pp.calc()
-        
+
         if s.mapHash:
             s.rank = await s.calc_lb_placement()
-            
+
         return s
 
     @classmethod
     async def from_submission(cls, data: dict):
-        data = data.split('+')
+        data = data.split(' ')
 
         s = cls()
-
         pname = data[13]
-        s.player = await glob.players.get(name=pname)
-        
+        s.player = glob.players.get(name=pname)
+
 
         if not s.player:
             # refer to gulag score.py
             return s
-        
+
+        if not s.player.stats.playing:
+            raise Exception('Recent play not found.')
+
         s.mapHash = s.player.stats.playing
         s.pp = await PPCalculator.from_md5(s.mapHash)
 
@@ -117,8 +120,8 @@ class Score:
         s.mods = data[0]
         s.grade = data[3]
         s.acc = float(data[10])/1000
-        s.fc = data[12] == 'true'
-        s.device_id = data[11]
+        s.fc = (data[12] == 'true') or (data[12] == '1') # 1.6.8 Fix
+        s.device_id = data[11] # 1.6.8: Int?
 
         s.pp = await PPCalculator.from_md5(s.mapHash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
 
@@ -128,7 +131,7 @@ class Score:
         if s.mapHash:
             await s.calc_status()
             s.rank = await s.calc_lb_placement()
-            
+
 
         return s
 
@@ -137,19 +140,21 @@ class Score:
         res = await glob.db.fetch("select count(*) as c from scores where mapHash = ? and score > ?", [self.mapHash, self.score])
         return int(res[0]['c']) + 1 if res else 1
 
-    
+
 
     async def calc_status(self):
-        res = await glob.db.userScore(id=self.player.id, mapHash=self.mapHash)
+        #res = await glob.db.userScore(id=self.player.id, mapHash=self.mapHash)
+        res = await glob.db.fetch('SELECT * FROM scores WHERE playerID = ? AND mapHash = ?', [self.player.id, self.mapHash])
 
         if res:
+            res = res[0]
             self.prev_best = await Score.from_sql(res['id'])
 
             if self.score > res['score']:
                 self.status = SubmissionStatus.BEST
                 self.prev_best.status = SubmissionStatus.SUBMITTED
-            
+
         else:
             self.status = SubmissionStatus.BEST
 
-            
+

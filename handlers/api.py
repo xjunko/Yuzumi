@@ -1,50 +1,69 @@
-from objects import glob
-from utils.response import Response
-
 import json
+from quart import Blueprint, request, jsonify
 
-async def get_stats(request):
-    args = request.rel_url.query
-    if 'name' not in args and 'id' not in args:
-        return Response("Missing parameter, need either name or id.")
+from objects import glob
 
-    if 'id' in args:
-        if not args['id'].isdecimal():
-            return Response("Invalid id.")
+bp = Blueprint('api', __name__)
+bp.prefix = '/api/'
 
-        pid = args['id']
+@bp.route('/get_online')
+async def get_online():
+  return {'online': len([_ for _ in glob.players if _.online])}
 
-    elif 'name' in args:
-        if len(args['name']) > 16:
-            return Response("Invalid name.")
 
-        pid = await glob.db.fetch("SELECT id FROM users where username_safe = ?", [args['name']])
+def get_player(args: list):
+  if 'id' not in args and 'name' not in args:
+    return 'Need id or name', 400
 
-        if not pid:
-            return Response("Player not found.")
+  if 'id' in args:
+    if not args['id'].isdecimal():
+      return 'Invalid id', 400
 
-        pid = pid[0]['id']
+    p = glob.players.get(id=int(args['id']))
+  else:
+    if len(args['name']) < 2:
+      return 'Invalid name', 400
 
-    res = await glob.db.fetch("SELECT * FROM stats WHERE id = ?", [pid])
+    # get player from name
+    p = glob.players.get(name=args['name'])
 
-    return Response(res) if res[0] else Response("Player not found.")
+  return p
 
-async def leaderboard(request):
-    players = sorted(glob.players.players, key=lambda x: x.stats.rankBy, reverse=True)
-    players = {n: {
-                    'id': p.id,
-                    'name': p.name,
-                    'rank': p.stats.rank,
-                    'tscore': p.stats.tscore,
-                    'rscore': p.stats.rscore,
-                    'pp': p.stats.pp
-                    }
 
-               for n, p in enumerate(players) if p.id != -1}
+@bp.route('/get_user')
+async def get_user():
+  args = request.args
 
+  p = get_player(args)
+  if isinstance(p, tuple):
+    return p
+
+  if not p:
+    return 'Player not found', 404
+
+
+  return p.as_json
+
+@bp.route('/get_scores')
+async def get_scores():
+  params = request.args
+
+  limit = min(params.get('limit', 50), 50)
+
+  p = get_player(params)
+  if isinstance(p, tuple):
+    return p
     
+  if not p:
+    return 'Player not found', 404
 
-    return Response(players)
+  scores = await glob.db.fetchall(
+  'SELECT id, status, mapHash, score, combo, rank, acc, hit300, hitgeki, '
+  'hit100, hitkatsu, hit50, hitmiss, mods, pp FROM scores WHERE playerID = ?'
+  'ORDER BY id DESC LIMIT ?'
+  , [p.id, limit]
+  )
 
+  return jsonify(scores) if scores else {'No score found.'}
 
 

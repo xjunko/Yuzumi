@@ -4,7 +4,7 @@ import logging
 from objects import glob
 
 class sqliteDB:
-    ''' based from cmyui's {pkg: mysql} but sqlite 
+    ''' based from cmyui's {pkg: mysql} but sqlite
     '''
     @staticmethod
     def dict_factory(cursor, row):
@@ -21,34 +21,34 @@ class sqliteDB:
                 CREATE TABLE IF NOT EXISTS "maps" ( "hash" TEXT, "data" TEXT, PRIMARY KEY("hash") );
 
                 CREATE TABLE IF NOT EXISTS "scores" (
-                  "id" INTEGER, 
-                  "status" INTEGER, 
-                  "mapID" INTEGER, 
-                  "mapHash" TEXT NOT NULL, 
-                  "playerID" INTEGER NOT NULL, 
-                  "score" INTEGER NOT NULL, 
-                  "combo" INTEGER NOT NULL, 
-                  "rank" TEXT NOT NULL, 
-                  "acc" INTEGER NOT NULL, 
-                  "hit300" INTEGER NOT NULL, 
-                  "hitgeki" INTEGER NOT NULL, 
-                  "hit100" INTEGER NOT NULL, 
-                  "hitkatsu" INTEGER NOT NULL, 
-                  "hit50" INTEGER NOT NULL, 
-                  "hitmiss" INTEGER NOT NULL, 
-                  "mods" TEXT, 
-                  "pp" INTEGER DEFAULT 0, 
+                  "id" INTEGER,
+                  "status" INTEGER,
+                  "mapID" INTEGER,
+                  "mapHash" TEXT NOT NULL,
+                  "playerID" INTEGER NOT NULL,
+                  "score" INTEGER NOT NULL,
+                  "combo" INTEGER NOT NULL,
+                  "rank" TEXT NOT NULL,
+                  "acc" INTEGER NOT NULL,
+                  "hit300" INTEGER NOT NULL,
+                  "hitgeki" INTEGER NOT NULL,
+                  "hit100" INTEGER NOT NULL,
+                  "hitkatsu" INTEGER NOT NULL,
+                  "hit50" INTEGER NOT NULL,
+                  "hitmiss" INTEGER NOT NULL,
+                  "mods" TEXT,
+                  "pp" INTEGER DEFAULT 0,
                   PRIMARY KEY("id" AUTOINCREMENT)
                 );
 
                 CREATE TABLE IF NOT EXISTS "stats" (
-                  "id" INTEGER, 
-                  "rank" INTEGER DEFAULT 0, 
-                  "pp" INTEGER DEFAULT 0, 
-                  "acc" INTEGER DEFAULT 100.0, 
-                  "tscore" INTEGER DEFAULT 0, 
-                  "rscore" INTEGER DEFAULT 0, 
-                  "plays" INTEGER DEFAULT 0, 
+                  "id" INTEGER,
+                  "rank" INTEGER DEFAULT 0,
+                  "pp" INTEGER DEFAULT 0,
+                  "acc" INTEGER DEFAULT 100.0,
+                  "tscore" INTEGER DEFAULT 0,
+                  "rscore" INTEGER DEFAULT 0,
+                  "plays" INTEGER DEFAULT 0,
                   PRIMARY KEY("id")
                 );
 
@@ -63,6 +63,7 @@ class sqliteDB:
                 "avatar_id" TEXT,
                 "custom_avatar" TEXT,
                 "email" TEXT,
+                "email_hash"	TEXT,
                 "status"    INTEGER DEFAULT 0,
                 PRIMARY KEY("id" AUTOINCREMENT)
                 );
@@ -93,7 +94,7 @@ class sqliteDB:
     async def close(self):
         logging.debug(f'Database is closed.')
         await self.db.close()
-        
+
 
     async def execute(self, query: str, params: list = []):
         async with self.db.execute(query, params) as cursor:
@@ -117,71 +118,6 @@ class sqliteDB:
         return await self.fetch(query, params, _all=True)
 
 
-
-    # osu shit starts here
-    async def idFromName(self, name: str):
-        name = name.lower()
-        res = await self.fetch('SELECT id FROM users WHERE username_safe == ?', [name])
-        return res[0]['id'] if res else -1
-
-
-    async def userStats(self, id: int):
-        res = await self.fetch('SELECT * FROM stats WHERE id = ?', [id])
-        return res[0] if res else {}
-
-    async def userInfo(self, id: int):
-        res = await self.fetch('SELECT * FROM users WHERE id = ?', [id])
-        return res[0] if res else {}
-
-
-    async def userData(self, id: int):
-        ''' more verbose version of userStats '''
-        data = await self.userInfo(id)
-        stats = await self.userStats(id)
-
-        if not data or not stats:
-            return {}
-        else:
-            data.update(stats)
-            return data
-
-    async def allPlayer(self):
-        ''' meme function '''
-        return await self.fetch('SELECT * FROM users')
-
-    async def authUser(self, id:int, password: str):
-        ''' bruh moment '''
-        if (user := await self.userInfo(id)):
-            if password == user['password']:
-                return True
-        else:
-            return False
-
-
-    # gameplay stuff?
-    async def leaderboard(self, mapHash: str):
-        order_by = 'pp' if glob.config.pp_leaderboard else 'score'
-        res = await self.fetchall(f'SELECT * FROM scores WHERE maphash = ? ORDER BY {order_by} DESC', [mapHash])
-
-        return res if res else {}
-
-    async def getPlay(self, id: int):
-        res = await self.fetch('SELECT * FROM scores WHERE id = ?', [id])
-
-        return res[0] if res else {}
-
-    async def userScore(self, id: int, mapHash: str):
-        res = await self.fetch('SELECT * FROM scores WHERE playerID = ? AND mapHash = ?', [id, mapHash])
-        return res[0] if res else {}
-
-
-
-
-
-
-
-
-    
 
 
 

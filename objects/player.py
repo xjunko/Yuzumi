@@ -1,150 +1,141 @@
+import logging
+import time
+import hashlib
 from dataclasses import dataclass
-import logging, bcrypt
 
 from objects import glob
-from utils import response
+import utils
 
 
 @dataclass
 class Stats:
-    id: int 
-    rank: int
-    tscore: int
-    rscore: int
-    acc: float
-    plays: int
-    pp: float
-    playing: str = ''
-    
+  id: int
+  rank: int
+  tscore: int
+  rscore: int
+  acc: float
+  plays: int
+  pp: float
+  playing: str = None
 
-    @property
-    def droid_acc(self):
-        acc = float(self.acc) * 1000
-        return str(acc).split('.')[0]
+  @property
+  def droid_acc(self):
+    return int(self.acc*1000)
 
-    @property
-    def rankBy(self):
-        return self.pp if glob.config.pp else self.rscore
+  @property
+  def rank_by(self):
+    return self.pp if glob.config.pp else self.rscore
+
+  @property
+  def as_json(self):
+    return {
+      'id': self.id,
+      'rank': self.rank,
+      'total_score': self.tscore,
+      'ranked_score': self.rscore,
+      'accurancy': self.acc,
+      'plays': self.plays,
+      'pp': self.pp,
+      'is_playing': self.playing
+
+    }
 
 
 class Player:
-    def __init__(self, **kwargs):
-        self.id = kwargs.get('id')
-        self.prefix = kwargs.get('prefix', '')
-        self.name = kwargs.get('name')
-        self.safe_name = self.make_safe(self.name) if self.name else None
-        self.stats: Stats = None
-        self.sign = kwargs.get('sign')
+  def __init__(self, **kwargs):
+    self.id: str = kwargs.get('id')
+    self.prefix: str = kwargs.get('prefix', '')
+    self.name: str = kwargs.get('username')
+    self.name_safe: str = utils.make_safe(self.name) if self.name else None
 
-        #self.pw_bcrypt = kwargs.get('pswd') # thinking
-
-    def __repr__(self):
-        return f'<{self.name} - {self.id}>'
-        
-    @staticmethod
-    def make_safe(name):
-        return name.lower().replace(' ', '_')
-
-    @property
-    def prefixName(self):
-        return f'[{self.prefix}]{self.name}' if self.prefix else self.name
-
-    @property
-    def rankBy(self):
-        return self.stats.pp if glob.config.pp else self.stats.rscore
-    
-
-    async def fromSQL(self):
-        stats = await glob.db.userStats(id=self.id)
-        if not stats:
-            return logging.error('Failed to get stats')
-
-        self.stats = Stats(**stats)
+    #
+    self.email_hash: str = kwargs.get('email_hash', '35da3c1a5130111d0e3a5f353389b476') # used for gravatar, default to my pfp lole
+    self.uuid: str = kwargs.get('uuid', None) # ...yea
 
 
-    async def update_stats(self):
-        # also credit to miau from oldsu! for this query, might use this but i found a another one that fits my use from gulag
-        '''
-            SELECT * FROM (SELECT Username, ROW_NUMBER() OVER (ORDER BY RankedScore DESC) AS 'Rank' FROM users) t WHERE Username=@username"
-            
-            res = await glob.db.fetch(query)
+    self.last_online: float = 0
+    self.stats: Stats = None
 
-            if res:
-                self.stats.rank = res[0]['player_rank']
+  def __repr__(self):
+    return f'<{self.id} - {self.name}>'
 
-            await glob.db.execute(f'UPDATE stats SET rank = {self.stats.rank} where id = {self.id}')
-        '''
-
-        res = await glob.db.fetchall(
-            'SELECT s.acc, s.pp FROM scores s '
-            'WHERE s.playerID = ? and s.status = 2 '
-            'ORDER BY s.score DESC LIMIT 100'
-            , [self.id]
-            )
-        
-        if not res:
-            return # man
-
-        stats = self.stats
-
-        # avrg acc
-        stats.acc = sum([row['acc'] for row in res[:50]]) / min(50, len(res))
-
-        # pp
-        #stats.pp = sum([row['pp'] for row in res])
-        ## calculate weighted pp based on top 100 scores
-        stats.pp = round(sum(row['pp']*0.95 ** i for i, row in enumerate(res)))
+  @property
+  def online(self):
+    # 30 seconds timeout, not really accurate cuz we update the last_online time on login and submit
+    return time.time()-30 < self.last_online
 
 
+  @property
+  def as_json(self):
+    return {
+      'id': self.id,
+      'prefix': self.prefix,
+      'name': self.name,
+      'online': self.online,
+      'stats': self.stats.as_json
+    }
 
-        # rank
-        rankParam = "pp" if glob.config.pp else "rscore"
-        rankBy = stats.pp if glob.config.pp else stats.rscore
-        res = await glob.db.fetch(
-            'SELECT count(*) AS c FROM stats '
-            'WHERE {} > ?'.format(rankParam)
-            , [rankBy]
-            )
+  @classmethod
+  async def from_sql(cls, user_id: int):
+    user_data = await glob.db.fetch("SELECT id, prefix, username, email_hash, email FROM users WHERE id = ?", [user_id])
+    user_stats = await glob.db.fetch("SELECT * FROM stats WHERE id = ?", [user_id])
 
-        stats.rank = res[0]['c'] + 1
+    if not user_data or not user_stats:
+      raise Exception('Failed to get user from database.')
 
-        # updates stats
-        await glob.db.execute('UPDATE stats SET acc = ?, rank = ?, pp = ? WHERE id = ?', [stats.acc, stats.rank, stats.pp, self.id])
+    user_data = user_data[0]
+    user_stats = user_stats[0]
 
+    # fix email_hash if its none and user got email (there should be)
+    if user_data['email_hash'] == None and user_data['email'] != None:
+      email_hash = utils.make_md5(user_data['email'])
+      await glob.db.execute('UPDATE users SET email_hash = ? WHERE id = ?', [email_hash, user_id])
 
+    user_data.pop('email', None)
 
+    p = cls(**user_data)
+    p.stats = Stats(**user_stats)
 
-
-
-
-    
-    async def login(self, password_hash: str):
-        bcrypt_cache = glob.cache['bcrypt']
-        res = await glob.db.fetch('SELECT id, username, password_hash FROM users where id = ?', [self.id])
+    return p
 
 
-        if res:
-            res = res[0]
-            if password_hash in bcrypt_cache:
-                if bcrypt_cache[password_hash] != res['password_hash']:
-                    return response.login(False, 'Wrong username or password')
+  async def update_stats(self):
+    res = await glob.db.fetchall(
+      'SELECT s.acc, s.pp FROM scores s '
+      'WHERE s.playerID = ? and s.status = 2 '
+      'ORDER BY s.score DESC LIMIT 100'
+      , [self.id]
+    )
 
-                return response.login(True, self)
-            else:
-                # first login
-                if not bcrypt.checkpw(password_hash.encode(), res['password_hash'].encode()):
-                    return response.login(False, 'Wrong username or password')
+    if not res:
+      return #logging.error(f'Failed to find player scores when updating stats. (Ignore if the player is new, id: {self.id})')
 
-                bcrypt_cache[password_hash] = res['password_hash']
-                return response.login(True, self)
+    stats = self.stats
 
-        return response.login(False, 'Wrong username or password')
+    # average acc
+    stats.acc = sum([row['acc'] for row in res[:50]]) / min(50, len(res))
+
+    # pp
+    ## weight and shit
+    stats.pp = round(sum(row['pp']*0.95 ** i for i, row in enumerate(res)))
+
+    # rank
+    rank_by = 'pp' if glob.config.pp else 'rscore'
+    higher_by = stats.pp if glob.config.pp else stats.rscore
+    res = await glob.db.fetch(
+      'SELECT count(*) AS c FROM stats '
+      'WHERE {} > ?'.format(rank_by)
+      , [higher_by]
+    )
+
+
+    stats.rank = res[0]['c'] + 1
+
+    # update into db
+    await glob.db.execute('UPDATE stats SET acc = ?, rank = ?, pp = ? WHERE id = ?', [stats.acc, stats.rank, stats.pp, self.id])
 
 
 
-        
-
-        
 
 
 
