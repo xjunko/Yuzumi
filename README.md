@@ -34,7 +34,7 @@
 
 ## Setting up (client)
 There's two way of doing this, hosts and modified .apk. <br/>
-If you're testing the server then I recommend you to use the Hosts method.
+Hosts method is better since you can change between servers without downloading apks.
 
 ### Hosts
 * Install [Hosts Go](https://play.google.com/store/apps/details?id=dns.hosts.server.change&hl=en&gl=US) from Google Play or other site
