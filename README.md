@@ -42,7 +42,7 @@ Hosts method is better since you can change between servers without downloading 
 * Add `ops.dgsrz.com` with your server ip address.
 * That's it
 
-### Apk (Recommended)
+### Apk
 There's also two way of doing this, build from sources or modified .apk.<br/>
 Since I don't commit java, we're going with the latter.
 
