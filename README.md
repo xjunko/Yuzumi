@@ -20,6 +20,7 @@
 * MySQL Support
 
 ## Preview (with PP system)
+[Video Gameplay](https://youtu.be/NF9VeNyj_gA)
 ![Main Menu](https://cdn.discordapp.com/attachments/703552229680087042/818712990916411432/Screenshot_2021-03-09-13-09-54-85.jpg)
 ![Leaderboard(pp)](https://cdn.discordapp.com/attachments/703552229680087042/818712991201361950/Screenshot_2021-03-09-13-11-09-33.jpg)
 ![Play Submit](https://cdn.discordapp.com/attachments/703552229680087042/818712991435456522/Screenshot_2021-03-09-13-12-30-75.jpg)
