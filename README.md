@@ -21,7 +21,7 @@
 
 ## Requirements
 * [ConEmu](https://conemu.github.io/) FOSS windows terminal emulator, (you can use your os default console, this is just for aesthetic if anything).
-* [Python 3.8+](https://www.python.org/downloads/release/python-386/)
+* [Python 3.8+](https://www.python.org/downloads/release/python-386/) (Recommended: Python 3.8.6)
 * [Notepad++](https://notepad-plus-plus.org/downloads/)
 * Python and general-programming knowledge.
 * An Domain or IP address
