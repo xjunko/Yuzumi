@@ -33,7 +33,7 @@
 * That's it. You can setup nginx and those web stuff if you want.
 
 ## Setting up (client)
-There's two way of doing this, hosts and modified .apk.
+There's two way of doing this, hosts and modified .apk. <br/>
 If you're testing the server then I recommend you to use the Hosts method.
 
 ### Hosts
