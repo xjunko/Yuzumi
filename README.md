@@ -27,7 +27,7 @@
 * An Domain or IP address
 
 ## Setting up (server)
-* Install the necessary python packages with `pip install -r requirements.txt` or `python3 -m pip install -r requirements.txt`
+* Install the necessary python packages with `pip install -r requirements.txt` or `python3.8 -m pip install -r requirements.txt`
 * Copy `config.sample.py` and name it `config.py`
 * Edit `config.py`, [osu!api](https://old.ppy.sh/p/api) (optional unless you're using pp system)
 * That's it. You can setup nginx and those web stuff if you want.
