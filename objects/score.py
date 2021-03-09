@@ -1,7 +1,7 @@
 from objects import glob
 from enum import IntEnum, unique
 
-from utils.pp import PPCalculator, modsBitsFromDroidStr
+from utils.pp import PPCalculator
 
 @unique
 class SubmissionStatus(IntEnum):
