@@ -66,9 +66,10 @@ class Score:
         s = cls()
         res = res[0]
         s.id = res['id']
+        s.bmap = await Beatmap.from_md5(res['mapHash'])
         s.player = glob.players.get(id=int(res['playerID']))
         s.status = SubmissionStatus(res['status'])
-        s.mapHash = res['mapHash']
+        s.map_hash = res['mapHash']
 
 
         s.score = res['score']
@@ -85,11 +86,11 @@ class Score:
         s.hgeki = res['hitgeki']
         s.hkatsu = res['hitkatsu']
 
-        s.pp = await PPCalculator.from_md5(s.mapHash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
+        s.pp = await PPCalculator.from_md5(s.map_hash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
         if s.pp:
             s.pp = await s.pp.calc()
 
-        if s.mapHash:
+        if s.map_hash:
             s.rank = await s.calc_lb_placement()
 
         return s
