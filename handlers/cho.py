@@ -9,6 +9,7 @@ from argon2 import PasswordHasher
 from objects import glob
 from objects.player import Player
 from objects.score import Score, SubmissionStatus
+from objects.beatmap import RankedStatus
 from handlers.response import Failed, Success, Failure
 
 import utils
@@ -228,12 +229,22 @@ async def submit_play():
 
     if s.status == SubmissionStatus.BEST:
       # if this score is better change old play status to 1
-      await glob.db.execute('UPDATE scores SET status = 1 WHERE status = 2 AND mapHash = ? AND playerID = ?', [s.mapHash, s.player.id])
+      await glob.db.execute('UPDATE scores SET status = 1 WHERE status = 2 AND mapHash = ? AND playerID = ?', [s.map_hash, s.player.id])
 
-    vals = [s.status, s.mapHash, s.player.id, s.score, s.max_combo, s.grade, s.acc, s.h300, s.hgeki, s.h100, s.hkatsu, s.h50, s.hmiss, s.mods, s.pp]
+    vals = [s.status, s.map_hash, s.player.id, s.score, s.max_combo, s.grade, s.acc, s.h300, s.hgeki, s.h100, s.hkatsu, s.h50, s.hmiss, s.mods, s.pp]
 
-    if s.mapHash == None:
+    if s.map_hash == None:
       return Failed('Server cannot find your recent play, maybe it restarted?')
+    elif not s.player:
+      return Failed('Player not found, report to server admin.')
+    elif not s.bmap:
+      # Map does not exists, most likely its a shit map.
+      # Returns current stats
+      return Success(s.player.stats.droid_submit_stats)
+    elif s.bmap.status == RankedStatus.Pending:
+      # User can remove this themselves, I'm just following gulag's osuSubmitModularSelector.
+      return Success(s.player.stats.droid_submit_stats)
+
 
     s.id = await glob.db.execute('INSERT INTO scores VALUES (NULL, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', vals)
 
@@ -248,7 +259,7 @@ async def submit_play():
     stats.plays += 1
     stats.tscore = s.score
 
-    if s.status == SubmissionStatus.BEST:
+    if s.status == SubmissionStatus.BEST and s.bmap.gives_reward:
       additive = s.score
 
       if s.prev_best:

@@ -1,6 +1,7 @@
 from objects import glob
 from enum import IntEnum, unique
 
+from objects.beatmap import Beatmap
 from utils.pp import PPCalculator
 
 @unique
@@ -26,7 +27,7 @@ class Score:
 
     def __init__(self):
         self.id = None
-
+        self.bmap = None
         self.map_hash = None
         self.player = None
 
@@ -66,9 +67,10 @@ class Score:
         s = cls()
         res = res[0]
         s.id = res['id']
+        s.bmap = await Beatmap.from_md5(res['mapHash'])
         s.player = glob.players.get(id=int(res['playerID']))
         s.status = SubmissionStatus(res['status'])
-        s.mapHash = res['mapHash']
+        s.map_hash = res['mapHash']
 
 
         s.score = res['score']
@@ -85,11 +87,11 @@ class Score:
         s.hgeki = res['hitgeki']
         s.hkatsu = res['hitkatsu']
 
-        s.pp = await PPCalculator.from_md5(s.mapHash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
+        s.pp = await PPCalculator.from_md5(s.map_hash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
         if s.pp:
             s.pp = await s.pp.calc()
 
-        if s.mapHash:
+        if s.map_hash:
             s.rank = await s.calc_lb_placement()
 
         return s
@@ -108,10 +110,14 @@ class Score:
             return s
 
         if not s.player.stats.playing:
-            raise Exception('Recent play not found.')
+            raise Exception('Failed to get the map user played. Maybe the server restarted?')
 
-        s.mapHash = s.player.stats.playing
-        s.pp = await PPCalculator.from_md5(s.mapHash)
+
+        s.map_hash = s.player.stats.playing
+
+        if s.map_hash:
+            s.bmap = await Beatmap.from_md5(s.map_hash)
+            s.pp = await PPCalculator.from_md5(s.map_hash)
 
         (s.score, s.max_combo) = map(int, data[1:3])
         (s.hgeki, s.h300, s.hkatsu, s.h100, s.h50,
@@ -123,28 +129,28 @@ class Score:
         s.fc = (data[12] == 'true') or (data[12] == '1') # 1.6.8 Fix
         s.device_id = data[11] # 1.6.8: Int?
 
-        s.pp = await PPCalculator.from_md5(s.mapHash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
+        s.pp = await PPCalculator.from_md5(s.map_hash, mods=s.mods, combo=s.max_combo, nmiss=s.hmiss, acc=s.acc)
 
-        if s.pp:
+        if s.bmap:
             s.pp = await s.pp.calc()
-
-        if s.mapHash:
             await s.calc_status()
             s.rank = await s.calc_lb_placement()
-
+        else:
+            s.pp = 0.0
+            s.status = SubmissionStatus.SUBMITTED
 
         return s
 
 
     async def calc_lb_placement(self):
-        res = await glob.db.fetch("select count(*) as c from scores where mapHash = ? and score > ?", [self.mapHash, self.score])
+        res = await glob.db.fetch("select count(*) as c from scores where mapHash = ? and score > ?", [self.map_hash, self.score])
         return int(res[0]['c']) + 1 if res else 1
 
 
 
     async def calc_status(self):
         #res = await glob.db.userScore(id=self.player.id, mapHash=self.mapHash)
-        res = await glob.db.fetch('SELECT * FROM scores WHERE playerID = ? AND mapHash = ?', [self.player.id, self.mapHash])
+        res = await glob.db.fetch('SELECT * FROM scores WHERE playerID = ? AND mapHash = ?', [self.player.id, self.map_hash])
 
         if res:
             res = res[0]
