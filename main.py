@@ -2,6 +2,7 @@ import logging
 import asyncio
 import os
 import coloredlogs
+import time
 from quart import Quart, Response, send_file
 
 # sus
@@ -15,7 +16,10 @@ from handlers.response import Failed
 
 #
 import utils
+
+# testing
 from utils import pp
+from objects.beatmap import Beatmap
 
 def make_app():
   app = Quart(__name__)
@@ -37,13 +41,20 @@ async def init_shit():
   utils.check_folder()
   # connect to db
   await glob.db.connect()
-  # recalc pp (Testing)
+
+
+  # Testing stuff
+  # recalc pp
   # await pp.recalc_scores()
+  # test bmap object
+  # await Beatmap.from_md5('3ef4d1085a8bee29660a2908cbb1dec9')
+
+
 
   # init players
   player_ids = await glob.db.fetchall("SELECT id FROM users where id != -1")
   for id in player_ids:
-    p = await Player.from_sql(id['id']) # mega sus
+    p = await Player.from_sql(id['id']) # maybe do this on login instead?, will prolly take alot of time to start if theres lot of players
     glob.players.add(p)
 
 
