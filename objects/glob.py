@@ -4,5 +4,8 @@ from .collections import PlayerList
 players: PlayerList = PlayerList()
 
 cache: dict = {
-  'hashes': {}
+  'hashes': {},
+  'beatmaps': {},
+  'unsubmitted': {}
+
 }
