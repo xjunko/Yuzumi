@@ -110,7 +110,7 @@ class Score:
             return s
 
         if not s.player.stats.playing:
-            raise Exception('Recent play not found.')
+            raise Exception('Failed to get the map user played. Maybe the server restarted?')
 
 
         s.map_hash = s.player.stats.playing
@@ -137,7 +137,7 @@ class Score:
             s.rank = await s.calc_lb_placement()
         else:
             s.pp = 0.0
-            s.status = submission.SUBMITTED
+            s.status = SubmissionStatus.SUBMITTED
 
         return s
 
