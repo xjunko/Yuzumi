@@ -1,17 +1,12 @@
 import asyncio
-import aiofiles
-import aiohttp
-import json
 import logging
 import oppadc
 from pathlib import Path
 from enum import Enum, IntEnum, unique
 
-
 from objects import glob
 from objects.beatmap import Beatmap
 
-beatmap_path = Path.cwd() / 'data/beatmaps'
 
 class droidMods(Enum):
     nm = '-'
