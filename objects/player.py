@@ -23,6 +23,11 @@ class Stats:
     return int(self.acc*1000)
 
   @property
+  def droid_submit_stats(self):
+    # returns current stats
+    return f'{self.rank} {self.rank_by} {self.droid_acc} 0'
+
+  @property
   def rank_by(self):
     return self.pp if glob.config.pp else self.rscore
 
