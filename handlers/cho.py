@@ -229,8 +229,6 @@ async def submit_play():
       # if this score is better change old play status to 1
       await glob.db.execute('UPDATE scores SET status = 1 WHERE status = 2 AND mapHash = ? AND playerID = ?', [s.map_hash, s.player.id])
 
-    vals = [s.status, s.map_hash, s.player.id, s.score, s.max_combo, s.grade, s.acc, s.h300, s.hgeki, s.h100, s.hkatsu, s.h50, s.hmiss, s.mods, s.pp]
-
     if s.map_hash == None:
       return Failed('Server cannot find your recent play, maybe it restarted?')
     elif not s.player:
@@ -243,7 +241,7 @@ async def submit_play():
       # User can remove this themselves, I'm just following gulag's osuSubmitModularSelector.
       return Success(s.player.stats.droid_submit_stats)
 
-
+    vals = [s.status, s.map_hash, s.player.id, s.score, s.max_combo, s.grade, s.acc, s.h300, s.hgeki, s.h100, s.hkatsu, s.h50, s.hmiss, s.mods, s.pp]
     s.id = await glob.db.execute('INSERT INTO scores VALUES (NULL, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', vals)
 
     ### The pain part
