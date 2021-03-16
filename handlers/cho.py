@@ -32,8 +32,6 @@ async def login():
     return Failed("User not found.")
 
   ## login shites
-  ## kinda unsafe cuz its just md5
-  ## will add bcrypt (optional maybe)
   res = (await glob.db.fetch("SELECT password_hash, status FROM users WHERE id = ?", [p.id]))[0]
   status = res['status']
   pswd_hash = res['password_hash']
