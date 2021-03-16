@@ -1,9 +1,7 @@
 import logging
 import asyncio
-import os
 import coloredlogs
-import time
-from quart import Quart, Response, send_file
+from quart import Quart
 
 # sus
 from objects import glob
