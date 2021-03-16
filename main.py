@@ -57,8 +57,6 @@ async def init_shit():
     p = await Player.from_sql(id['id']) # maybe do this on login instead?, will prolly take alot of time to start if theres lot of players
     glob.players.add(p)
 
-
-
   async def background_tasks():
     async def update_players_stats():
         for p in glob.players:
@@ -73,12 +71,8 @@ async def init_shit():
 
     await asyncio.sleep(glob.config.cron_delay*60)
 
-
-
   # run the background task
   asyncio.ensure_future(background_tasks())
-
-
 
 @app.after_serving
 async def close_shit():
@@ -96,17 +90,7 @@ async def index():
     'title': 'when the impostor is sus'
   }
 
-@app.route('/avatar/<int:player_id>')
-async def serve_avatar(player_id: int):
-
-  if not os.path.isfile(f'data/avatars/{player_id}.png'):
-    player_id = -1
-
-  return await send_file(f'data/avatars/{player_id}.png')
-
-
 if __name__ == '__main__':
-  #logging.basicConfig(level=logging.INFO)
   coloredlogs.install(level=logging.INFO)
   app.run(port=glob.config.port, use_reloader=False, host=glob.config.host, debug=False)
 
