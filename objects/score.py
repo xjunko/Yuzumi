@@ -1,3 +1,4 @@
+from objects.player import Player
 from objects import glob
 from enum import IntEnum, unique
 
@@ -26,35 +27,32 @@ class Score:
     '''
 
     def __init__(self):
-        self.id = None
-        self.bmap = None
-        self.map_hash = None
-        self.player = None
+        self.id: int = 0
+        self.bmap: Beatmap = None
+        self.map_hash: str = ''
+        self.player: Player = None
 
-        self.pp = None
-        self.map = None
-        self.score = None
-        self.max_combo = None
-        self.mods = None
+        self.pp: int = 0
+        self.score: float = 0
+        self.max_combo: int = 0
+        self.mods: int = 0
 
-        self.acc = None
+        self.acc: float = 0
 
-        self.h300 = None
-        self.h100 = None
-        self.h50 = None
-        self.hmiss = None
-        self.hgeki = None
-        self.hkatsu = None
-        self.grade = None
+        self.h300: int = 0
+        self.h100: int = 0
+        self.h50: int = 0
+        self.hmiss: int = 0
+        self.hgeki: int = 0
+        self.hkatsu: int = 0
+        self.grade: str = ''
 
-        self.rank = None
-        self.fc = None
-        self.status = SubmissionStatus.SUBMITTED
-        #self.passed = None # droid doesnt have this
-        #self.perfect = None
-        self.device_id = None # unused
+        self.rank: str = ''
+        self.fc: bool = None
+        self.status: SubmissionStatus = SubmissionStatus.SUBMITTED
+        self.device_id: str = '' # unused
 
-        self.prev_best = None
+        self.prev_best: Score = None
 
     @classmethod
     async def from_sql(cls, score_id: int):
