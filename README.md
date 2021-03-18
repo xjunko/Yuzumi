@@ -3,12 +3,14 @@
 </h2>
 
 <h4 align="center">
-	meme server
+        meme server <br/>
+        <a href="https://www.codefactor.io/repository/github/fireredz/yuzumi"><img src="https://www.codefactor.io/repository/github/fireredz/yuzumi/badge" alt="CodeFactor" /></a>
 </h4>
 
 <p align="center">
 	<img height=300 src="https://cdn.discordapp.com/attachments/716590826729504788/818733799256621056/yuzumi_yuzuhara.jpg" alt="lole">
 </p>
+
 
 
 ## Features
