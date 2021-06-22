@@ -5,5 +5,6 @@ players: PlayerList = PlayerList()
 
 cache: dict = {
   'hashes': {},
-  'beatmaps': {}
+  'beatmaps': {},
+  'unsubmitted': {}
 }
