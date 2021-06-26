@@ -11,6 +11,7 @@ beatmap_folder = Path.cwd() / 'data/beatmaps'
 @unique
 class RankedStatus(IntEnum):
   NotSubmitted = -1
+  Graveyard = -2
   Pending = 0
   Ranked = 1
   Approved = 2
