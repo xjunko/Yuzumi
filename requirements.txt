@@ -1,8 +1,0 @@
-quart
-coloredlogs
-aiosqlite
-aiohttp
-aiofiles
-hypercorn
-git+https://github.com/The-CJ/oppadc.py.git#egg=oppadc
-argon2-cffi
